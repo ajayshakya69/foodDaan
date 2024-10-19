@@ -1,0 +1,57 @@
+
+const { ObjectId } = require("mongodb")
+const FoodDonation = require("../models/foodModel")
+class FoodService {
+
+    static async createFoodItem(data) {
+        const saveItem = new FoodDonation({ ...data });
+
+        try {
+            await saveItem.save();
+            return saveItem;
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    }
+
+    static async updateFoodItem(id, data) {
+
+        console.log("updating")
+        const updatedItem = await FoodDonation.findByIdAndUpdate(
+            id,
+            data,
+            { new: true }
+        )
+
+        if (!updatedItem) {
+            throw new Error("Food donation item not found");
+        }
+
+        return updatedItem;
+    }
+
+
+    static async getFoodItemById(id) {
+        console.log(id);
+        const data = await FoodDonation.findById(id);
+
+        return data;
+    }
+
+
+    static async getFoodItemsByUserId({ id }) {
+
+        const data = await FoodDonation.find({ donatedBy: id });
+
+        return data;
+    }
+
+    static async getFoodItems() {
+        const data = await FoodDonation.find()
+        return data;
+    }
+
+}
+
+
+module.exports = FoodService
