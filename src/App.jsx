@@ -109,7 +109,7 @@ const App = () => {
           element: <ReceivedFood />
         },
         {
-          path: "/food-detail",
+           path: "/food-detail/:id",
           element: <FoodDetailPage />
         },
         {
