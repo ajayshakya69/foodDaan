@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCount } from '../context/CountProvider';
 
 import axios from '../lib/axios';
+import { useLoader } from '@/context/LoaderProvider';
 
 const DonorDashboard = () => {
   const [foodPacketsDonated, setFoodPacketsDonated] = useState(100);
@@ -11,11 +12,12 @@ const DonorDashboard = () => {
   const [leaderboardRank, setLeaderboardRank] = useState(12);
 
   const count = useCount();
+  const {setLoading} = useLoader()
 
   const fetchData = async () => {
     const userData = localStorage.getItem("loggingUser");
     const id = JSON.parse(userData)._id
-
+    setLoading(true)
     axios
       .get(`/food/items/user/${id}`)
       .then(res => {
@@ -26,6 +28,7 @@ const DonorDashboard = () => {
       .catch(err => {
         console.log(err.response)
       })
+      .finally(()=>setLoading(false))
 
   };
 
@@ -41,8 +44,9 @@ const DonorDashboard = () => {
   }, []);
 
   useEffect(() => {
+    
     setCommunityMembers(count.userCount.requester + count.userCount.donor)
-
+    
 
   }, [count.userCount])
 

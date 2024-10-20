@@ -1,7 +1,8 @@
+
 import { createContext, useContext, useState } from "react";
 
 
-const Context = createContext();
+const Context = createContext(null);
 
 export const useLoader = () => {
     const loader = useContext(Context);
@@ -10,7 +11,7 @@ export const useLoader = () => {
 
 export function LoaderProvider(props) {
 
-    const [loading, setLoading] = useState(false)
+
 
     return (
         <Context.Provider value={{ loading, setLoading }}>
@@ -18,3 +19,4 @@ export function LoaderProvider(props) {
         </Context.Provider>
     )
 }
+

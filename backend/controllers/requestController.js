@@ -1,4 +1,4 @@
-const { foodRequestSchema ,statusSchema} = require("../DTO/foodRequestSchema");
+const { foodRequestSchema, statusSchema } = require("../DTO/foodRequestSchema");
 const { idSchema } = require("../DTO/authentication");
 const FoodService = require("../services/foodService")
 const FoodRequestService = require("../services/requestService")
@@ -19,7 +19,7 @@ class FoodRequestController {
         try {
             const { foodItemId } = validation.data;
             try {
-                console.log("checking food item")
+                console.log("checking food item", foodItemId)
 
                 const foodDetail = await FoodService.getFoodItemById(foodItemId)
 
@@ -28,17 +28,19 @@ class FoodRequestController {
                     throw new Error("Product not found")
                 }
                 const request = await FoodRequestService.saveRequest(validation.data);
-                console.log("request created", request)
-                res.status(204).json({ message: "request created", request });
+               
+                
+
+                res.status(201).send(request)
+
             } catch (error) {
-                res.status(404)
+                res.status(400)
                 throw new Error(error.message)
             }
 
-
         } catch (error) {
             if (error.message !== "Product not found")
-                res.status(400)
+                res.status(404)
             next(error);
         }
     }

@@ -31,14 +31,17 @@ class FoodService {
     }
 
 
-    static async getFoodItemById({ id }) {
+    static async getFoodItemById(id) {
+              
+        console.log(id);
+
 
         const data = await FoodDonation
             .findById(id)
             .populate('donatedBy',"name organization_name")
             .exec();
 
-        console.log(data)
+    
         return data;
     }
 

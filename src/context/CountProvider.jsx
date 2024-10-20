@@ -1,9 +1,13 @@
 
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { createContext, useContext, useLayoutEffect, useState } from "react";
 
 import { useLoader } from "./LoaderProvider"
-import Context from "./CountContext";
+
 import axios from "../lib/axios";
+
+
+
+const Context = createContext();
 
 
 export const useCount = () => {

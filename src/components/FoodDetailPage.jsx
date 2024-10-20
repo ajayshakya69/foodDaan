@@ -1,24 +1,47 @@
 
-
 import React, { useEffect, useState } from 'react';
 import { CalendarIcon, MapPinIcon, UserIcon } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from '@/lib/axios';
-
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLoader } from '@/context/LoaderProvider';
+import ConfirmMation from './AlertDialog';
+
+
 
 const FoodDetailPage = () => {
   const [requestQuantity, setRequestQuantity] = useState(1);
+  const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
 
-  const [product, setProduct] = useState({});
+
   const { id } = useParams()
   const { setLoading } = useLoader();
 
-  const handleRequestFood = () => {
+  const handleFoodRequest = () => {
+    const userData = JSON.parse(localStorage.getItem('loggingUser'));
 
+ 
+    const data = {
+      requesterId: userData._id,
+      donorId: product?.donatedBy?._id,
+      foodItemId: id,
+      quantity: requestQuantity
+    }
+
+    axios
+      .post('/request/create', data)
+      .then(res => {
+        if (res.status == 201) {
+            console.log(res.data)
+            navigate('/recipient-dashboard')
+        }
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+      .finally(()=>console.log(err))
   };
 
   const getProduct = () => {
@@ -26,23 +49,25 @@ const FoodDetailPage = () => {
     axios
       .get(`/food/item/${id}`)
       .then(res => {
-        console.log(res.data)
         if (res.status == 200) {
           setProduct(res.data)
+          
         }
       })
       .catch(err => {
-        console.log(err)
+        console.log(err.response)
       })
       .finally(() => setLoading(false))
   }
 
   useEffect(() => {
+
     getProduct();
-  }, [])
+
+  }, [id])
 
   return (
-    (<div
+    (!!product && <div
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-800 p-4">
       <Card className="w-full max-w-2xl shadow-xl">
         <CardHeader className="text-center">
@@ -62,7 +87,7 @@ const FoodDetailPage = () => {
           </div>
           <div className="flex items-center space-x-2 text-gray-800">
             <UserIcon className="w-5 h-5" />
-            <span>Donated by: <span className='capitalize text-lg font-bold'>{product.donatedBy.organization_name}</span> </span>
+            <span>Donated by: <span className='capitalize text-lg font-bold'>{product?.donatedBy?.organization_name || "N/A"}</span> </span>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg">
             <p className="text-lg font-semibold text-gray-800">Available Quantity: {product.quantity}</p>
@@ -82,14 +107,19 @@ const FoodDetailPage = () => {
               onChange={(e) => setRequestQuantity(parseInt(e.target.value))}
               className="w-24" />
           </div>
-          <Button
-            onClick={handleRequestFood}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-            Request Food
-          </Button>
+          <ConfirmMation
+            title="Confirm Request!"
+            message="Are you sure you want to request the food"
+            handleFoodRequest={handleFoodRequest}
+          />
         </CardFooter>
       </Card>
-    </div>)
+    
+           
+   
+     
+   
+    </div >)
   );
 };
 

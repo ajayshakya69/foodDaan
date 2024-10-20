@@ -106,7 +106,7 @@ class FoodController {
             throw new Error(zodError(validation.error));
         }
         try {
-            const data = await FoodService.getFoodItemById(validation.data)
+            const data = await FoodService.getFoodItemById(validation.data.id)
             if (!data) {
                 throw new Error("Product Not Found")
             }

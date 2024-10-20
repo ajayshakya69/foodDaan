@@ -64,7 +64,7 @@ class FoodRequestService {
 
     static async updateRequestStatus(id, status) {
         try {
-            await Request.findByIdAndUpdate(id, { status: status })
+           const request =  await Request.findByIdAndUpdate(id, { status: status })
         } catch (error) {
             throw new Error("error in updating status");
         }
