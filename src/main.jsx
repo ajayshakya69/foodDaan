@@ -1,7 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import { CountProvider } from './context/countProvider'
+import { CountProvider } from './context/CountProvider'
+import { LoaderProvider } from './context/LoaderProvider'
 
 
 
@@ -13,8 +14,10 @@ import './index.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <CountProvider>
-      <App />
-    </CountProvider>
+    <LoaderProvider>
+      <CountProvider>
+        <App />
+      </CountProvider>
+    </LoaderProvider>
   </StrictMode>
 )

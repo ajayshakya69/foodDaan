@@ -1,6 +1,6 @@
 
-const { ObjectId } = require("mongodb")
-const FoodDonation = require("../models/foodModel")
+
+const FoodDonation = require("../models/foodModel");
 class FoodService {
 
     static async createFoodItem(data) {
@@ -16,7 +16,7 @@ class FoodService {
 
     static async updateFoodItem(id, data) {
 
-        console.log("updating")
+        
         const updatedItem = await FoodDonation.findByIdAndUpdate(
             id,
             data,
@@ -31,8 +31,8 @@ class FoodService {
     }
 
 
-    static async getFoodItemById(id) {
-        console.log(id);
+    static async getFoodItemById({id}) {
+      
         const data = await FoodDonation.findById(id);
 
         return data;

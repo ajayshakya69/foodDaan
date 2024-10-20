@@ -1,3 +1,4 @@
+import axios from '@/lib/axios';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -5,26 +6,31 @@ const FoodDetailPage = () => {
   const { id } = useParams();
   const [foodItem, setFoodItem] = useState(null);
   const [requestedQuantity, setRequestedQuantity] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+
+  const fetchFoodItem = async () => {
+    setLoading(true);
+    axios
+      .get("/food/item/67127c8f7dce977288328598")
+      .then(res => {
+        if (res.status == 200)
+          setFoodItem(res.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  };
+
   useEffect(() => {
-    const fetchFoodItem = async () => {
-      try {
-        const response = await fetch(`/api/food/${id}`); // Replace with your actual API endpoint
-        if (!response.ok) throw new Error('Failed to fetch food item');
-        const data = await response.json();
-        setFoodItem(data);
-      } catch (error) {
-        console.error('Error fetching food item:', error);
-        setError('Failed to load food details. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchFoodItem();
-  }, [id]);
+
+  }, []);
 
   const handleOrder = () => {
     if (requestedQuantity < 1 || requestedQuantity > foodItem.quantity) {
@@ -32,7 +38,7 @@ const FoodDetailPage = () => {
       return;
     }
 
-    // Simulate placing the order
+   
     console.log(`Order placed for ${requestedQuantity} of ${foodItem.foodName}`);
     alert(`Order placed for ${requestedQuantity} ${foodItem.foodName}`);
   };

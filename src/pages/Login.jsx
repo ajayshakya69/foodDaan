@@ -7,14 +7,14 @@ import LogoNav from '../components/LogoNav';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [isCaptchaVerified, setisCaptchaVerified] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [pending, setPending] = useState(false)
 
 
   const handleCaptcha = (e) => {
-    setCaptchaVerified(e.target.checked);
+    setisCaptchaVerified(e.target.checked);
   };
 
   const validateEmail = (email) => {
@@ -27,12 +27,17 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPending(true)
+
     if (!validateEmail(email)) {
       setError('Please enter a valid email');
+      setPending(false);
+      setisCaptchaVerified(false);
       return;
     }
-    if (!captchaVerified) {
+    if (!isCaptchaVerified) {
       setError('Please verify that you are human.');
+      setPending(false);
+      setisCaptchaVerified(false);
       return;
     }
     setError('');
@@ -41,16 +46,20 @@ const Login = ({ onLogin }) => {
       .post("/auth/login", { email, password })
       .then(res => {
         console.log(res)
+
         if (res.status == 200) {
           localStorage.setItem("loggingUser", JSON.stringify(res.data.user));
           onLogin();
+         
           navigate('/');
+          
+          navigate(0); 
         }
       })
 
       .catch(error => {
         setPassword('');
-        setCaptchaVerified(false);
+        setisCaptchaVerified(false);
         if (error.response) {
 
           if (error.response.status === 401) {
@@ -69,15 +78,16 @@ const Login = ({ onLogin }) => {
 
 
         setPassword('');
-        setCaptchaVerified(false);
+        setisCaptchaVerified(false);
       })
       .finally(() => {
         setPending(false);
+        console.log('pending false')
       });
 
   };
 
-
+  console.log(pending)
 
   return (
     <>
@@ -133,7 +143,12 @@ const Login = ({ onLogin }) => {
               <div className="flex items-center justify-between w-full max-w-md p-2 pl-5 border rounded-lg bg-gray-100">
                 <div className="checkbox-wrapper-12">
                   <div className="cbx">
-                    <input id="cbx-12" type="checkbox" onChange={handleCaptcha} />
+                    <input
+                      id="cbx-12"
+                      type="checkbox"
+                      checked={isCaptchaVerified}
+                      onChange={handleCaptcha}
+                    />
                     <label htmlFor="cbx-12"></label>
                     <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
                       <path d="M2 8.36364L6.23077 12L13 2"></path>
@@ -152,9 +167,9 @@ const Login = ({ onLogin }) => {
                 <button
                   type="button"
                   onClick={handleCaptcha}
-                  className={`p-2 ml-4 text-white font-semibold rounded-lg transition-colors duration-300 ${captchaVerified ? 'bg-green-500' : 'bg-red-500 hover:bg-red-600'}`}
+                  className={`p-2 ml-4 text-white font-semibold rounded-lg transition-colors duration-300 ${isCaptchaVerified ? 'bg-green-500' : 'bg-red-500 hover:bg-red-600'}`}
                 >
-                  {captchaVerified ? 'Verified!' : 'I am not a robot'}
+                  {isCaptchaVerified ? 'Verified!' : 'I am not a robot'}
                 </button>
               </div>
             </div>

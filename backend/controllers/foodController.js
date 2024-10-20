@@ -66,7 +66,7 @@ class FoodController {
             if (data.length === 0) {
                 throw new Error("Product Not Found")
             }
-            res.status(200).json({ message: "Product found", data })
+            res.status(200).send(data)
         } catch (error) {
             if (error.message === "Product Not Found")
                 res.status(400)
@@ -80,7 +80,6 @@ class FoodController {
             ;
         if (!validation.success) {
             res.status(400);
-            console.log(validation.error)
             throw new Error(zodError(validation.error));
         }
         try {
@@ -88,7 +87,7 @@ class FoodController {
             if (data.length === 0) {
                 throw new Error("No donation found")
             }
-            res.status(200).json({ message: "donation found", data })
+            res.status(200).send(data)
         } catch (error) {
             if (error.message === "No donation found")
                 res.status(400)
@@ -111,7 +110,7 @@ class FoodController {
             if (data.length === 0) {
                 throw new Error("Product Not Found")
             }
-            res.status(200).json({ message: "Product found", data })
+            res.status(200).send(data)
         } catch (error) {
             if (error.message === "Product Not Found")
                 res.status(400)

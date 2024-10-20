@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import { useNavigate } from 'react-router-dom';
 import axios from '../lib/axios';
+import { Button } from "./ui/Button"
 
 const DonationForm = () => {
   const [formData, setFormData] = useState({
@@ -81,7 +82,15 @@ const DonationForm = () => {
       .post("/food/create", formData)
       .then(res => {
         if (res.status == 201) {
-          console.log(res.data)
+          setShowPopup(true)
+          setFormData({
+            foodName: '',
+            description: '',
+            quantity: 1,
+            expirationDate: '',
+            location: '',
+            donatedBy: '',
+          });
         }
       })
       .catch(err => {
@@ -193,11 +202,10 @@ const DonationForm = () => {
             </button>
             <h1 className="text-2xl font-bold mb-4 text-center">Donated!</h1>
             <h2 className="text-lg mb-4 text-center">You are a true Superhero of our nation</h2>
-            <img
-              src="superhero_image_url"
-              alt="Superhero"
-              className="mx-auto mb-4"
-            />
+            <div className="flex gap-5 align-baselin justify-center">
+              <Button onClick={()=>setShowPopup(false)}>Donate more</Button>
+              <Button onClick={()=>navigate('/donor-dashboard')}>Dashboard</Button>
+            </div>
           </div>
         </div>
       )}

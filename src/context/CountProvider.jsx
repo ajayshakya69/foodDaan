@@ -1,7 +1,8 @@
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 
-import Context from "./Context";
+import { useLoader } from "./LoaderProvider"
+import Context from "./CountContext";
 import axios from "../lib/axios";
 
 
@@ -14,8 +15,10 @@ export const useCount = () => {
 
 export const CountProvider = (props) => {
     const [userCount, setUserCount] = useState({ donor: 10, requester: 15 });
+    const loader = useLoader();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
+        loader.setLoading(true);
         axios
             .get("/users/count")
             .then(res => {
@@ -26,6 +29,8 @@ export const CountProvider = (props) => {
             .catch(err => {
                 console.log(err);
             })
+            .finally(() => loader.setLoading(false))
+
     }, [])
 
     return (

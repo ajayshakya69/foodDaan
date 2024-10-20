@@ -4,7 +4,7 @@ const FoodController = require("../controllers/foodController")
 
 const router = express.Router();
 
-router.get("/allitem", asynchandler(FoodController.getFoodItems))
+router.get("/allitems", asynchandler(FoodController.getFoodItems))
 
 router.get("/item/:id", asynchandler(FoodController.getFoodItemById))
 

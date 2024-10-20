@@ -1,7 +1,8 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../lib/axios';
-import { useCount } from '../context/countProvider';
+import { useCount } from '../context/CountProvider';
+
 
 
 
@@ -35,12 +36,14 @@ const Home = ({ isLoggedIn }) => {
   const counts = useCount();
 
 
+  
+
   const slides = [
     'slide_image1.jpeg', 'slide_image2.jpg', 'slide_image3.jpg',
     'slide_image4.jpg', 'slide_image5.jpg', 'slide_image6.jpg'
   ];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isLoggedIn) {
       const timer = setTimeout(() => {
         setShowPopup(true);
@@ -73,9 +76,9 @@ const Home = ({ isLoggedIn }) => {
   };
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setDonors(counts.userCount.donor)
-    setCommunity(counts.userCount.requester+counts.userCount.donor)
+    setCommunity(counts.userCount.requester + counts.userCount.donor)
   }, [counts.userCount])
 
 

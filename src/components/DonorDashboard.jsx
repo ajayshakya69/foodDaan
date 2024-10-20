@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useCount } from '../context/countProvider';
+import { useCount } from '../context/CountProvider';
 
 import axios from '../lib/axios';
 
@@ -17,15 +17,15 @@ const DonorDashboard = () => {
     const id = JSON.parse(userData)._id
 
     axios
-    .get(`/food/items/user/${id}`)
-    .then(res=>{
-        if(res.status==200)
-          console.log(res.data.data);
-        setDonations(res.data.data)
-    })
-    .catch(err=>{
-      console.log(err.response)
-    })
+      .get(`/food/items/user/${id}`)
+      .then(res => {
+        if (res.status == 200)
+          console.log(res.data);
+        setDonations(res.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
 
   };
 
@@ -46,7 +46,6 @@ const DonorDashboard = () => {
 
   }, [count.userCount])
 
-
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 p-10 text-white">
       <div className="container mx-auto mt-8">
@@ -64,7 +63,7 @@ const DonorDashboard = () => {
           </div>
           <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-2xl font-bold mb-2">Your Donations</h2>
-            <p className="text-4xl font-extrabold">{donations.length}</p>
+            <p className="text-4xl font-extrabold">{donations ? donations.length : 0}</p>
           </div>
         </div>
 
@@ -80,7 +79,8 @@ const DonorDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {donations.map((donation) => (
+              {!donations&&<p>No Donation Found</p>}
+              {donations && donations.map((donation) => (
                 <tr key={donation._id}>
                   <td className="py-2">
                     {new Date(donation.createdAt).toLocaleDateString()} {new Date(donation.createdAt).toLocaleTimeString()}

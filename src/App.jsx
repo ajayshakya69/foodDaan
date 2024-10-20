@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Navbar from './components/Navbar';
@@ -16,10 +16,16 @@ import Register from './pages/Register';
 import ErrorPage from './pages/ErrorPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Loader from './components/Loader';
+
+import {useLoader} from "./context/LoaderProvider"
+
 
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const loader = useLoader();
 
 
 
@@ -35,17 +41,21 @@ const App = () => {
 
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const loggedInStatus = localStorage.getItem('isLoggedIn');
     if (loggedInStatus === 'true') {
       setIsLoggedIn(true);
     }
   }, []);
 
+
+
+
+
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <Login onLogin={handleLogin} />
+      element: (<Login onLogin={handleLogin} />)
     },
     {
       path: "/register",
@@ -54,12 +64,17 @@ const App = () => {
     {
 
       path: "/",
-      element: <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />,
+      element: (
+        <>
+          <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+          <Loader show={loader.loading} />
+        </>
+      ),
       children: [
 
         {
           path: "/",
-          element: <Home isLoggedIn={isLoggedIn} />
+          element: <Home isLoggedIn={isLoggedIn} key={Math.random()} />
         },
         {
           path: "/about",
@@ -114,6 +129,9 @@ const App = () => {
     },
 
   ])
+
+
+
   return (
     <>
 

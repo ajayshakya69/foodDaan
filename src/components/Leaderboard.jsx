@@ -6,38 +6,40 @@ const Leaderboard = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-     setTimeout(() => {
+    setTimeout(() => {
       setLeaderboard([
         {
-          donations:2200,
-          restaurant:"ksdf"
+          donations: 2200,
+          restaurant: "ksdf"
         },
         {
-          donations:2200,
-          restaurant:"ksdf"
+          donations: 2200,
+          restaurant: "ksdf"
         },
         {
-          donations:2200,
-          restaurant:"ksdf"
+          donations: 2200,
+          restaurant: "ksdf"
         },
         {
-          donations:2200,
-          restaurant:"ksdf"
+          donations: 2200,
+          restaurant: "ksdf"
         },
         {
-          donations:2200,
-          restaurant:"ksdf"
+          donations: 2200,
+          restaurant: "ksdf"
         }
-        
+
       ])
       setLoading(false)
-     }, 5000);
+    }, 5000);
   }, []);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-40">
-      <div className="loader animate-spin rounded-full border-t-4 border-b-4 border-green-500 w-12 h-12"></div>
-    </div>;
+    return (
+      <div className="flex justify-center items-center h-40">
+        <div className="loader animate-spin rounded-full border-t-4 border-b-4 border-green-500 w-12 h-12"></div>
+      </div>
+    )
   }
 
   if (error) {
