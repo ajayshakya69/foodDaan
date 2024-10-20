@@ -16,7 +16,7 @@ class FoodService {
 
     static async updateFoodItem(id, data) {
 
-        
+
         const updatedItem = await FoodDonation.findByIdAndUpdate(
             id,
             data,
@@ -31,10 +31,14 @@ class FoodService {
     }
 
 
-    static async getFoodItemById({id}) {
-      
-        const data = await FoodDonation.findById(id);
+    static async getFoodItemById({ id }) {
 
+        const data = await FoodDonation
+            .findById(id)
+            .populate('donatedBy',"name organization_name")
+            .exec();
+
+        console.log(data)
         return data;
     }
 

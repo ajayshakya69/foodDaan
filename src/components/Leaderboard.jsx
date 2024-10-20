@@ -1,11 +1,13 @@
+import { useLoader } from '@/context/LoaderProvider';
 import React, { useState, useEffect } from 'react';
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
-  const [loading, setLoading] = useState(true);
+ const {setLoading} = useLoader()
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    setLoading(true)
     setTimeout(() => {
       setLeaderboard([
         {
@@ -30,17 +32,12 @@ const Leaderboard = () => {
         }
 
       ])
+
       setLoading(false)
-    }, 5000);
+    }, 3000);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-40">
-        <div className="loader animate-spin rounded-full border-t-4 border-b-4 border-green-500 w-12 h-12"></div>
-      </div>
-    )
-  }
+
 
   if (error) {
     return (

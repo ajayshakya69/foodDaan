@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import { useNavigate } from 'react-router-dom';
 import axios from '../lib/axios';
-import { Button } from "./ui/Button"
+import { Button } from "./ui/button"
 
 const DonationForm = () => {
   const [formData, setFormData] = useState({

@@ -107,7 +107,7 @@ class FoodController {
         }
         try {
             const data = await FoodService.getFoodItemById(validation.data)
-            if (data.length === 0) {
+            if (!data) {
                 throw new Error("Product Not Found")
             }
             res.status(200).send(data)
