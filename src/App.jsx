@@ -16,11 +16,12 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Loader from './components/Loader';
 
-import {useLoader} from "./context/LoaderProvider"
+import { useLoader } from "./context/LoaderProvider"
 import Dashboard from './components/dashboard/Dashboard';
 import DataTable from './components/dashboard/Datatable';
 import HomePage from './components/dashboard/Home';
 import ProfilePage from './components/dashboard/Profile,';
+import ProtectedRoute from './context/ProtectedRoute';
 
 
 
@@ -153,7 +154,7 @@ const App = () => {
         },
 
         {
-          path: "/request-food",
+          path: "/food-pantry",
           element: <RequestFood />
         },
 
@@ -162,7 +163,7 @@ const App = () => {
           element: <ReceivedFood />
         },
         {
-           path: "/food-detail/:id",
+          path: "/food-detail/:id",
           element: <FoodDetailPage />
         },
         {
@@ -176,28 +177,32 @@ const App = () => {
 
       ]
     },
-     {
-    path: "/dashboard", // Base route for the dashboard
-    element: <Dashboard />, // Dashboard as the layout component
-    children: [
-      {
-        path: "", // Dashboard home route
-        element: <HomePage  requestsData={requestsData}/>,
-      },
-      {
-        path: "food-requests", // Route for food requests
-        element: <DataTable data={requestsData} title="Food Requests"  />,
-      },
-      {
-        path: "your-donations", // Route for donations
-        element: <DataTable  data={donationsData} title="Your Donations" />,
-      },
-      {
-        path: "profile", // Route for profile page
-        element: <ProfilePage userProfile={userProfile}/>,
-      },
-    ],
-  },
+    {
+      path: "/dashboard",
+      element: (
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      ),
+      children: [
+        {
+          path: "",
+          element: <HomePage requestsData={requestsData} />,
+        },
+        {
+          path: "food-requests",
+          element: <DataTable data={requestsData} title="Food Requests" />,
+        },
+        {
+          path: "your-donations",
+          element: <DataTable data={donationsData} title="Your Donations" />,
+        },
+        {
+          path: "profile",
+          element: <ProfilePage userProfile={userProfile} />,
+        },
+      ],
+    },
     {
       path: "/*",
       element: <ErrorPage />

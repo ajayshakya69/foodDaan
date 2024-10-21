@@ -8,16 +8,19 @@ import { LoaderProvider } from './context/LoaderProvider'
 
 import App from './App'
 import './index.css'
+import { AuthProvider } from './context/AuthProvider'
 
 
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <LoaderProvider>
-      <CountProvider>
-        <App />
-      </CountProvider>
-    </LoaderProvider>
+    <AuthProvider>
+      <LoaderProvider>
+        <CountProvider>
+          <App />
+        </CountProvider>
+      </LoaderProvider>
+    </AuthProvider>
   </StrictMode>
 )

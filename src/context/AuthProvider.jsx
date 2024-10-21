@@ -1,20 +1,25 @@
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 
 const Context = createContext(null);
 
-export const useLoader = () => {
+
+export const useAuth = () => {
     const loader = useContext(Context);
     return loader;
 }
 
-export function LoaderProvider(props) {
+export function AuthProvider(props) {
 
+    const [user, setUser] = useState(null)
 
+    useEffect(() => {
+           
+    }, [])
 
     return (
-        <Context.Provider value={{ loading, setLoading }}>
+        <Context.Provider value={{ user, setUser }}>
             {props.children}
         </Context.Provider>
     )
