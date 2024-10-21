@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CalendarIcon, MapPinIcon, UserIcon } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import axios from '@/lib/axios';
+import { privateAxios } from '@/lib/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLoader } from '@/context/LoaderProvider';
 import ConfirmMation from './AlertDialog';
@@ -22,7 +22,7 @@ const FoodDetailPage = () => {
   const handleFoodRequest = () => {
     const userData = JSON.parse(localStorage.getItem('loggingUser'));
 
- 
+
     const data = {
       requesterId: userData._id,
       donorId: product?.donatedBy?._id,
@@ -30,28 +30,28 @@ const FoodDetailPage = () => {
       quantity: requestQuantity
     }
 
-    axios
+    privateAxios
       .post('/request/create', data)
       .then(res => {
         if (res.status == 201) {
-            console.log(res.data)
-            navigate('/recipient-dashboard')
+          console.log(res.data)
+          navigate('/recipient-dashboard')
         }
       })
-      .catch(err=>{
+      .catch(err => {
         console.log(err)
       })
-      .finally(()=>console.log(err))
+      .finally(() => console.log(err))
   };
 
   const getProduct = () => {
     setLoading(true)
-    axios
+    privateAxios
       .get(`/food/item/${id}`)
       .then(res => {
         if (res.status == 200) {
           setProduct(res.data)
-          
+
         }
       })
       .catch(err => {
@@ -114,11 +114,11 @@ const FoodDetailPage = () => {
           />
         </CardFooter>
       </Card>
-    
-           
-   
-     
-   
+
+
+
+
+
     </div >)
   );
 };

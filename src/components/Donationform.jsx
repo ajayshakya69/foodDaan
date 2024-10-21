@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import { useNavigate } from 'react-router-dom';
-import axios from '../lib/axios';
+import{ publicAxios }from '../lib/axios';
 import { Button } from "./ui/button"
 
 const DonationForm = () => {
@@ -78,7 +78,7 @@ const DonationForm = () => {
 
 
 
-    axios
+    publicAxios
       .post("/food/create", formData)
       .then(res => {
         if (res.status == 201) {

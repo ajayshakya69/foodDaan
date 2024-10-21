@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import axios from "@/lib/axios"
+import {publicAxios} from "@/lib/axios"
 import { useLoader } from "../context/LoaderProvider"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -21,7 +21,7 @@ export default function ProductPageComponent() {
   const loader = useLoader()
   useEffect(() => {
     loader.setLoading(true)
-    axios
+    publicAxios
       .get('/food/allitems')
       .then(res => {
         if (res.status === 200)

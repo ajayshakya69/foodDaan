@@ -58,7 +58,7 @@ const navigate = useNavigate()
                 {showSubTopics === 'donor' && (
                   <ul className="absolute top-full left-0 bg-gray-800 rounded-lg p-2 shadow-lg z-10">
                     <li>
-                      <Link to="/donor-dashboard" className="block text-white hover:text-pink-400 p-2 transition duration-200">Dashboard</Link>
+                      <Link to="/dashboard" className="block text-white hover:text-pink-400 p-2 transition duration-200">Dashboard</Link>
                     </li>
                     <li>
                       <Link to="/donation-form" className="block text-white hover:text-pink-400 p-2 transition duration-200">Donate Food</Link>
@@ -83,7 +83,7 @@ const navigate = useNavigate()
                 {showSubTopics === 'recipient' && (
                   <ul className="absolute top-full left-0 bg-gray-800 rounded-lg p-2 shadow-lg z-10">
                     <li>
-                      <Link to="/recipient-dashboard" className="block text-white hover:text-pink-400 p-2 transition duration-200">Dashboard</Link>
+                      <Link to="/dashboard" className="block text-white hover:text-pink-400 p-2 transition duration-200">Dashboard</Link>
                     </li>
                     <li>
                       <Link to="/request-food" className="block text-white hover:text-pink-400 p-2 transition duration-200">Request Food</Link>

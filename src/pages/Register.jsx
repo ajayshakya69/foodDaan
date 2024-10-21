@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../lib/axios';
+import {publicAxios} from '../lib/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoNav from '../components/LogoNav';
 
@@ -93,7 +93,7 @@ const Register = () => {
       return;
     }
 
-    axios
+    publicAxios
       .post("/auth/register", formdata)
       .then(res => {
 

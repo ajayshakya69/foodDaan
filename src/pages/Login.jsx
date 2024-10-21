@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import validator from 'validator';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from '../lib/axios';
+import {publicAxios} from '../lib/axios';
 import LogoNav from '../components/LogoNav';
 
 const Login = ({ onLogin }) => {
@@ -42,7 +42,7 @@ const Login = ({ onLogin }) => {
     }
     setError('');
 
-    axios
+    publicAxios
       .post("/auth/login", { email, password })
       .then(res => {
         console.log(res)

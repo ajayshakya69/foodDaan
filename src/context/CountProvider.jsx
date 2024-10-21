@@ -3,7 +3,7 @@ import { createContext, useContext, useLayoutEffect, useState } from "react";
 
 import { useLoader } from "./LoaderProvider"
 
-import axios from "../lib/axios";
+import {publicAxios} from "../lib/axios";
 
 
 
@@ -23,7 +23,7 @@ export const CountProvider = (props) => {
 
     useLayoutEffect(() => {
         loader.setLoading(true);
-        axios
+        publicAxios
             .get("/users/count")
             .then(res => {
                 if (res.status === 200) {
