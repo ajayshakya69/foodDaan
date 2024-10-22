@@ -16,14 +16,15 @@ export function AuthProvider(props) {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        
+        const userData = JSON.parse(localStorage.getItem('loggingUser'));
+        setUser(userData);
 
           
            
     }, [])
 
     return (
-        <Context.Provider value={{ user, setUser }}>
+        <Context.Provider value={user}>
             {props.children}
         </Context.Provider>
     )

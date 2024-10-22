@@ -17,20 +17,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { BarChart3 } from "lucide-react";
-import { useEffect } from "react";
-import { parse } from "postcss";
+import { useEffect, useState } from "react";
 import { privateAxios } from "@/lib/axios";
+import { useLoader } from "@/context/LoaderProvider";
+import { useAuth } from "@/context/AuthProvider";
 
 
 
 export default function HomePage({ requestsData }) {
-    const [user, setUser] = useState(second)
+    const [request, setRequest] = useState(null)
+    const { setLoading } = useLoader()
+    const user = useAuth()
 
     useEffect(() => {
-        privateAxios
-        .get
 
-    })
+
+        setLoading(true)
+
+        privateAxios
+            .get(`/requests/recent/${user.role}/${user._id}`)
+            .then(res => setRequest(res.data))
+            .catch(err => console.log(err))
+            .finally(() => setLoading(false))
+
+    }, [])
+
+
 
     return (
         (<div className="space-y-8">

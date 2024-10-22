@@ -87,6 +87,8 @@ class FoodRequestController {
 
     }
 
+
+
     static async updateRequestStatus(req, res, next) {
         const idValidation = idSchema.safeParse(req.params.id);
 
@@ -115,7 +117,7 @@ class FoodRequestController {
         const validation = idSchema.safeParse(req.params.id);
         if (!validation.success) {
             res.status(400);
-            throw new Error(zodError(validation.error));
+            throw new Error("id required");
         }
         try {
             const request = await FoodRequestService.getRequestById(validation.data)
@@ -143,19 +145,16 @@ class FoodRequestController {
             throw new Error(zodError(roleValidation.error));
         }
         try {
-            const recentRequest = await FoodRequestService.getRecentRequests(idValidation.data, roleValidation.data)
-            if (recentRequest.length < 0)
+            const recentRequests = await FoodRequestService.getRecentRequests(idValidation.data, roleValidation.data)
+            if (recentRequests.length < 0)
                 throw new Error("No request found")
+            res.status(200).send(recentRequests)
         } catch (error) {
             if (error.message === "No request found")
                 res.status(404)
             next(error)
         }
     }
-
-
-
-
 
 }
 
