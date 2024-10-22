@@ -1,4 +1,5 @@
 
+import { privateAxios } from "@/lib/axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 
@@ -15,6 +16,9 @@ export function AuthProvider(props) {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
+        
+
+          
            
     }, [])
 

@@ -1,5 +1,5 @@
 const { foodRequestSchema, statusSchema } = require("../DTO/foodRequestSchema");
-const { idSchema } = require("../DTO/authentication");
+const { idSchema, roleSchema } = require("../DTO/authentication");
 const FoodService = require("../services/foodService")
 const FoodRequestService = require("../services/requestService")
 const zodError = require("../lib/zodError")
@@ -7,7 +7,7 @@ const zodError = require("../lib/zodError")
 class FoodRequestController {
     static async saveRequest(req, res, next) {
 
-        console.log("in the save request")
+
         const validation = foodRequestSchema.safeParse(req.body);
 
         if (!validation.success) {
@@ -15,11 +15,11 @@ class FoodRequestController {
             throw new Error(zodError(validation.error));
         }
 
-        console.log("data validated")
+
         try {
             const { foodItemId } = validation.data;
             try {
-                console.log("checking food item", foodItemId)
+
 
                 const foodDetail = await FoodService.getFoodItemById(foodItemId)
 
@@ -28,8 +28,8 @@ class FoodRequestController {
                     throw new Error("Product not found")
                 }
                 const request = await FoodRequestService.saveRequest(validation.data);
-               
-                
+
+
 
                 res.status(201).send(request)
 
@@ -46,9 +46,9 @@ class FoodRequestController {
     }
 
     static async getRequestsByDonorId(req, res, next) {
-        console.log("params", req.params)
 
-        const validation = idSchema.safeParse(req.params);
+
+        const validation = idSchema.safeParse(req.params.donorId);
         if (!validation.success) {
             res.status(400);
             throw new Error(zodError(validation.error));
@@ -68,7 +68,7 @@ class FoodRequestController {
 
     static async getRequestsByRequesterId(req, res, next) {
 
-        const validation = idSchema.safeParse(req.params);
+        const validation = idSchema.safeParse(req.params.requesterId);
         if (!validation.success) {
             res.status(400);
             throw new Error(zodError(validation.error));
@@ -88,7 +88,7 @@ class FoodRequestController {
     }
 
     static async updateRequestStatus(req, res, next) {
-        const idValidation = idSchema.safeParse(req.params);
+        const idValidation = idSchema.safeParse(req.params.id);
 
         if (!idValidation.success) {
             res.status(400);
@@ -102,7 +102,7 @@ class FoodRequestController {
         }
 
         try {
-            await FoodRequestService.updateRequestStatus(idValidation.data.id, statusValidation.data.status)
+            await FoodRequestService.updateRequestStatus(idValidation.data, statusValidation.data.status)
             res.status(204).send();
         } catch (error) {
             next(error)
@@ -112,7 +112,7 @@ class FoodRequestController {
     }
 
     static async getRequestByid(req, res, next) {
-        const validation = idSchema.safeParse(req.params);
+        const validation = idSchema.safeParse(req.params.id);
         if (!validation.success) {
             res.status(400);
             throw new Error(zodError(validation.error));
@@ -128,6 +128,35 @@ class FoodRequestController {
             next(error)
         }
     }
+
+    static async getRecentRequests(req, res, next) {
+
+        const idValidation = idSchema.safeParse(req.params.userId);
+        if (!idValidation.success) {
+            res.status(400);
+            throw new Error(zodError(idValidation.error));
+        }
+        const roleValidation = roleSchema.safeParse(req.params.role)
+
+        if (!roleValidation.success) {
+            res.status(400);
+            throw new Error(zodError(roleValidation.error));
+        }
+        try {
+            const recentRequest = await FoodRequestService.getRecentRequests(idValidation.data, roleValidation.data)
+            if (recentRequest.length < 0)
+                throw new Error("No request found")
+        } catch (error) {
+            if (error.message === "No request found")
+                res.status(404)
+            next(error)
+        }
+    }
+
+
+
+
+
 }
 
 module.exports = FoodRequestController;

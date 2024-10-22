@@ -1,6 +1,6 @@
 import { useAuth } from '@/context/AuthProvider';
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ isLoggedIn, onLogout }) => {
   const [showSubTopics, setShowSubTopics] = useState(null);
@@ -34,7 +34,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
       <nav ref={navbarRef} className="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-700 p-3 shadow-lg fixed w-full z-50">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-white text-2xl font-bold mr-8">
-            <Link to="/">Food Daan</Link>
+            <NavLink to="/">Food Daan</NavLink>
           </div>
           <div className="flex items-center relative">
             <button
@@ -45,36 +45,38 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
               </svg>
             </button>
-            <ul className={`flex flex-col lg:flex-row space-x-0 lg:space-x-6 text-white text-lg transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen overflow-y-auto' : 'max-h-0 overflow-hidden'} lg:max-h-full lg:overflow-visible`}>
+            <ul className={`flex flex-col navbar lg:flex-row space-x-0 lg:space-x-6 text-white text-lg transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen navbar overflow-y-auto' : 'max-h-0 overflow-hidden'} lg:max-h-full lg:overflow-visible`}>
               <li>
-                <Link to="/" className="hover:text-yellow-300 transition duration-200 block p-2 lg:p-0">Home</Link>
+                <NavLink
+              
+                 to="/" className="hover:text-yellow-300 transitiond nav-link-item  duration-200 block p-2 lg:p-0">Home</NavLink>
               </li>
               {isLoggedIn && (
                 <li>
-                  <Link to="/dashboard" className="hover:text-yellow-300 transition duration-200 block p-2 lg:p-0">Dashboard</Link>
+                  <NavLink to="/dashboard" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Dashboard</NavLink>
                 </li>
 
 
               )}
               <li>
-                <Link to="/food-pantry" className="hover:text-yellow-300 transition duration-200 block p-2 lg:p-0">Food Pantry</Link>
+                <NavLink to="/food-pantry" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Food Pantry</NavLink>
               </li>
 
               {isLoggedIn && (
                 <li>
-                  <Link to="/donation-form" className="hover:text-yellow-300 transition duration-200 block p-2 lg:p-0">Donate Food</Link>
+                  <NavLink to="/donation-form" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Donate Food</NavLink>
                 </li>
 
 
               )}
 
               <li>
-                <Link to="/leaderboard" className="hover:text-yellow-300 transition duration-200 block p-2 lg:p-0">LeaderBoard</Link>
+                <NavLink to="/leaderboard" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">LeaderBoard</NavLink>
               </li>
               {!isLoggedIn && (
                 <>
                   <li>
-                    <Link to="/login" className="hover:text-yellow-300 transition duration-200 block p-2 lg:p-0">Login</Link>
+                    <NavLink to="/login" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Login</NavLink>
                   </li>
                 </>
               )}

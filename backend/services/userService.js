@@ -29,6 +29,10 @@ class UserService {
         let user = await User.findOne({ email });
         return user;
     }
+    static async getUserInfo({id}) {
+        let user = await User.findById(id);
+        return user;
+    }
 
     static async getUserCount() {
 
@@ -44,6 +48,9 @@ class UserService {
 
         return userCount
     }
+    
+
+  
 }
 
 module.exports = UserService;

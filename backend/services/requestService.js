@@ -16,10 +16,10 @@ class FoodRequestService {
 
 
             const dbRequest = await Request.findOne({ requesterId: requesterId, foodItemId: foodItemId })
- 
+
 
             if (!dbRequest) {
-               
+
 
                 const request = new Request({
                     requesterId,
@@ -29,10 +29,10 @@ class FoodRequestService {
                 })
 
                 await request.save();
-                
+
                 return request;
             } else {
-                
+
 
                 quantity += dbRequest.quantity;
 
@@ -49,31 +49,29 @@ class FoodRequestService {
         }
     }
 
-    static async getRequestsByDonorId({ id }) {
-
-
-        const data = await Request.find({ donorId: id })
-        return data;
-    }
-
-    static async getRequestsByrequesterId({ id }) {
-        const data = await Request.find({ requesterId: id })
-        return data;
-    }
 
 
     static async updateRequestStatus(id, status) {
         try {
-           const request =  await Request.findByIdAndUpdate(id, { status: status })
+            const request = await Request.findByIdAndUpdate(id, { status: status })
         } catch (error) {
             throw new Error("error in updating status");
         }
     }
 
-    static async getRequestById({ id }) {
+    static async getRequestById(id) {
         const data = Request.findById(id);
 
         return data;
+    }
+
+    static async getRecentRequests(id, role) {
+
+        const request = await Request.find({ [`${role}Id`]: id })
+            .sort({ createdAt: -1 })
+            .limit(5);
+
+        return request;
     }
 }
 

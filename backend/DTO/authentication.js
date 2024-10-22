@@ -31,16 +31,14 @@ const loginUserSchema = z.object({
 
 
 
-const idSchema = z.object({
-    id: z.string()
-        .regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId format"),
-})
+const idSchema = z.string()
+    .regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId format");
 
-const roleSchema = z.object({
-    role:z.enum( ['donor', 'requester','all'])
-}
 
-)
+const roleSchema = z.enum(['donor', 'requester', 'all'])
+
+
+
 
 module.exports = {
     registerUserSchema,

@@ -27,7 +27,7 @@ class FoodController {
     }
 
     static async updateFoodItem(req, res, next) {
-        const idvalidation = idSchema.safeParse(req.params);
+        const idvalidation = idSchema.safeParse(req.params.id);
 
         if (!idvalidation.success) {
             res.status(400);
@@ -44,7 +44,7 @@ class FoodController {
 
         try {
 
-            const saveItem = await FoodService.updateFoodItem(dataValidation.data)
+            const saveItem = await FoodService.updateFoodItem(idvalidation.data,dataValidation.data)
 
             res.status(200).json({ message: "item updated", data: saveItem })
         } catch (error) {
@@ -76,7 +76,7 @@ class FoodController {
 
 
     static async getFoodItemsByUserId(req, res, next) {
-        const validation = idSchema.safeParse(req.params)
+        const validation = idSchema.safeParse(req.params.userId)
             ;
         if (!validation.success) {
             res.status(400);
@@ -98,7 +98,7 @@ class FoodController {
 
 
     static async getFoodItemById(req, res,next) {
-        const validation = idSchema.safeParse(req.params)
+        const validation = idSchema.safeParse(req.params.id)
             ;
         if (!validation.success) {
             res.status(400);
@@ -106,7 +106,7 @@ class FoodController {
             throw new Error(zodError(validation.error));
         }
         try {
-            const data = await FoodService.getFoodItemById(validation.data.id)
+            const data = await FoodService.getFoodItemById(validation.data)
             if (!data) {
                 throw new Error("Product Not Found")
             }

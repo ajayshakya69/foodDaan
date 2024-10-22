@@ -11,6 +11,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.navbar .active{
+  color: rgb(253 224 71 / var(--tw-text-opacity));
+}
+
+.dash-nav .active{
+  background-color: rgba(255, 255, 255, 0.3);
+  color:white;
+}
+
+
 @keyframes slide {
   0% {
       transform: translateX(100%);

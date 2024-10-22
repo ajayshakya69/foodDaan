@@ -17,10 +17,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { BarChart3 } from "lucide-react";
+import { useEffect } from "react";
+import { parse } from "postcss";
+import { privateAxios } from "@/lib/axios";
 
 
 
 export default function HomePage({ requestsData }) {
+    const [user, setUser] = useState(second)
+
+    useEffect(() => {
+        privateAxios
+        .get
+
+    })
+
     return (
         (<div className="space-y-8">
             <h1 className="text-3xl font-bold text-white">Dashboard</h1>

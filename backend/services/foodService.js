@@ -46,7 +46,7 @@ class FoodService {
     }
 
 
-    static async getFoodItemsByUserId({ id }) {
+    static async getFoodItemsByUserId(id) {
 
         const data = await FoodDonation.find({ donatedBy: id });
 

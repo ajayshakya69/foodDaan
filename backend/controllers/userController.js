@@ -2,6 +2,7 @@
 const { idSchema } = require("../DTO/authentication");
 const zodError = require("../lib/zodError");
 const UserService = require("../services/userService")
+
 function structuredCount(data) {
     let result = {};
     data.forEach(item => {
@@ -40,8 +41,22 @@ class UserController {
 
     }
 
-    static async getUserById() {
-
+    static async getUserById(req, res, next) {
+         const validation = idSchema.safeParse(req.params)
+         if(!validation.success){
+            res.status(400)
+            throw new Error(zodError(validation.error))
+         }
+         try {
+            const user = await UserService.getUserInfo()
+            if(!user)
+                throw new Error("user not found")
+            
+         } catch (error) {
+             if(error.message==="user not found")
+                res.status(400)
+            next(error)
+         }
     }
 }
 
