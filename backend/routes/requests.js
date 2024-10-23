@@ -7,10 +7,14 @@ const router = express.Router();
 router.post("/request/create", asynchandler(FoodController.saveRequest))
 
 router.get("/request/:id", asynchandler(FoodController.getRequestByid))
+
+
 router.get("/requests/recent/:role/:userId", asynchandler(FoodController.getRecentRequests))
 
-router.get("/donor/requests/:requesterId", asynchandler(FoodController.getRequestsByDonorId))
-router.get("/requester/requests/:donorId", asynchandler(FoodController.getRequestsByRequesterId))
+
+router.get("/requests/:role/:userId", asynchandler(FoodController.getRequestsByUserId))
+
+
 
 router.put("/request/update/:id", asynchandler(FoodController.updateRequestStatus))
 

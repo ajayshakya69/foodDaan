@@ -1,5 +1,8 @@
+
+const mongoose = require("mongoose");
 const Request = require("../models/foodRequestModel")
     ;
+const { Mongoose } = require("mongoose");
 
 class FoodRequestService {
 
@@ -60,21 +63,50 @@ class FoodRequestService {
     }
 
     static async getRequestById(id) {
-        const data = Request.findById(id);
+        const data = await Request.findById(id);
+
+        return data;
+    }
+    static async getRequestsByUserId(id, role) {
+        console.log("requests comes", `${role}Id`)
+        
+        const matchFilter = {
+            [`${role}Id`]: new mongoose.Types.ObjectId(id)
+        };
+
+        const data = await Request.aggregate([
+            {
+                $facet: {
+                    requestData: [
+                        { $match:matchFilter}
+                    ],
+                    counts: [
+                        {
+                            $group: {
+                                _id: "$status",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            }
+        ])
+
+       
+        console.log("daRequest.ta", data)
 
         return data;
     }
 
     static async getRecentRequests(id, role) {
 
-        console.log("requests comes")
 
         const request = await Request.find({ [`${role}Id`]: id })
             .sort({ createdAt: -1 })
             .limit(5)
             .populate("foodItemId")
 
-            console.log(request)
+        console.log(request)
 
 
         return request;

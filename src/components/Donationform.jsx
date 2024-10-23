@@ -95,21 +95,26 @@ const DonationForm = () => {
       })
       .catch(err => {
         console.log(err.response.data)
-      })
+      }).finally(()=> setDonorId())
 
 
 
 
   };
-  useEffect(() => {
 
+
+  function setDonorId(){
     const userData = JSON.parse(localStorage.getItem('loggingUser'));
 
     setFormData(prevData => ({
       ...prevData,
       donatedBy: userData._id
     }));
+  }
+  useEffect(() => {
 
+   
+    setDonorId();
   }, [])
 
 

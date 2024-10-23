@@ -45,17 +45,25 @@ class FoodRequestController {
         }
     }
 
-    static async getRequestsByDonorId(req, res, next) {
+    static async getRequestsByUserId(req, res, next) {
 
 
-        const validation = idSchema.safeParse(req.params.donorId);
-        if (!validation.success) {
+        const idValidation = idSchema.safeParse(req.params.userId);
+        if (!idValidation.success) {
             res.status(400);
-            throw new Error(zodError(validation.error));
+            throw new Error(zodError(idValidation.error));
         }
+        const roleValidation = roleSchema.safeParse(req.params.role)
+
+        if (!roleValidation.success) {
+            res.status(400);
+            throw new Error(zodError(roleValidation.error));
+        }
+
+
         try {
-            const data = await FoodRequestService.getRequestsByDonorId(validation.data)
-            if (data.length === 0)
+            const data = await FoodRequestService.getRequestsByUserId(idValidation.data,roleValidation.data)
+            if (!data)
                 throw new Error("Request not found");
             res.status(200).json(data)
         } catch (error) {
@@ -66,26 +74,7 @@ class FoodRequestController {
 
     }
 
-    static async getRequestsByRequesterId(req, res, next) {
-
-        const validation = idSchema.safeParse(req.params.requesterId);
-        if (!validation.success) {
-            res.status(400);
-            throw new Error(zodError(validation.error));
-        }
-
-        try {
-            const data = await FoodRequestService.getRequestsByrequesterId(validation.data)
-            if (data.length === 0)
-                throw new Error("Request not found");
-            res.status(200).json(data);
-        } catch (error) {
-            if (error.message === "Request not found")
-                res.status(404)
-            next(error)
-        }
-
-    }
+ 
 
 
 
