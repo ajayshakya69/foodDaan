@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/context/AuthProvider';
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
@@ -5,7 +6,8 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 const Navbar = ({ isLoggedIn, onLogout }) => {
   const [showSubTopics, setShowSubTopics] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useAuth()
+
+ const user = useAuth();
 
   const navbarRef = useRef(null);
   const navigate = useNavigate()
@@ -22,7 +24,6 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
-    console.log(user)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -62,7 +63,8 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
                 <NavLink to="/food-pantry" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Food Pantry</NavLink>
               </li>
 
-              {isLoggedIn && (
+              {(isLoggedIn && user.role==="donor")&& (
+                
                 <li>
                   <NavLink to="/donation-form" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Donate Food</NavLink>
                 </li>

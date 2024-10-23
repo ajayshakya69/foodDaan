@@ -46,10 +46,14 @@ class AuthController {
 
         const { email, password } = validation.data;
 
+
+        console.log(validation.data)
+
         try {
 
             const checkUser = await UserService.getUserInfo(email)
 
+        
 
             if (!checkUser || !(await checkUser.matchPassword(password))) {
                 throw new Error("invalid credentials");

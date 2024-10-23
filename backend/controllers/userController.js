@@ -9,7 +9,7 @@ function structuredCount(data) {
         if (item._id === "donor" || item._id === "requester")
             result[item._id] = item.count
     })
-    
+
     return result;
 }
 
@@ -42,21 +42,21 @@ class UserController {
     }
 
     static async getUserById(req, res, next) {
-         const validation = idSchema.safeParse(req.params)
-         if(!validation.success){
+        const validation = idSchema.safeParse(req.params.id)
+        if (!validation.success) {
             res.status(400)
             throw new Error(zodError(validation.error))
-         }
-         try {
-            const user = await UserService.getUserInfo()
-            if(!user)
+        }
+        try {
+            const user = await UserService.getUserById(validation.data)
+            if (!user)
                 throw new Error("user not found")
-            
-         } catch (error) {
-             if(error.message==="user not found")
-                res.status(400)
+            res.status(200).send(user)
+        } catch (error) {
+            if (error.message === "user not found")
+                res.status(404)
             next(error)
-         }
+        }
     }
 }
 

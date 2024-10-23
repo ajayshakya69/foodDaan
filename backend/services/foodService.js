@@ -1,5 +1,6 @@
 
 
+const { split } = require("postcss/lib/list");
 const FoodDonation = require("../models/foodModel");
 class FoodService {
 
@@ -32,16 +33,16 @@ class FoodService {
 
 
     static async getFoodItemById(id) {
-              
+
         console.log(id);
 
 
         const data = await FoodDonation
             .findById(id)
-            .populate('donatedBy',"name organization_name")
+            .populate('donatedBy', "name organization_name")
             .exec();
 
-    
+
         return data;
     }
 
@@ -54,7 +55,9 @@ class FoodService {
     }
 
     static async getFoodItems() {
-        const data = await FoodDonation.find()
+        const currentDate = new Date().toISOString().split('T')[0];
+        const data = await FoodDonation.find({ expirationDate: { $gt: currentDate } });
+        
         return data;
     }
 

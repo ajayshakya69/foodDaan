@@ -3,7 +3,7 @@ import validator from 'validator';
 import { useNavigate, Link } from 'react-router-dom';
 import { publicAxios } from '../lib/axios';
 import LogoNav from '../components/LogoNav';
-import { useAuth } from '@/context/AuthProvider';
+
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ const Login = ({ onLogin }) => {
   const navigate = useNavigate();
   const [pending, setPending] = useState(false)
 
-  const { setUser } = useAuth()
+
 
   const handleCaptcha = (e) => {
     setisCaptchaVerified(e.target.checked);

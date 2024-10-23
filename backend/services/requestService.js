@@ -67,9 +67,15 @@ class FoodRequestService {
 
     static async getRecentRequests(id, role) {
 
+        console.log("requests comes")
+
         const request = await Request.find({ [`${role}Id`]: id })
             .sort({ createdAt: -1 })
-            .limit(5);
+            .limit(5)
+            .populate("foodItemId")
+
+            console.log(request)
+
 
         return request;
     }

@@ -1,6 +1,6 @@
 
-import { privateAxios } from "@/lib/axios";
-import { createContext, useContext, useEffect, useState } from "react";
+
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 
 const Context = createContext(null);
@@ -15,16 +15,18 @@ export function AuthProvider(props) {
 
     const [user, setUser] = useState(null)
 
+    const memoizedUser = useMemo(() => user, [user]);
+    
     useEffect(() => {
-        const userData = JSON.parse(localStorage.getItem('loggingUser'));
-        setUser(userData);
-
-          
-           
-    }, [])
+       const userData = JSON.parse(localStorage.getItem("loggingUser"));
+        if (userData && (!user || user._id !== userData._id)) { 
+            setUser(userData);
+        }
+        
+    }, [user])
 
     return (
-        <Context.Provider value={user}>
+        <Context.Provider value={memoizedUser}>
             {props.children}
         </Context.Provider>
     )

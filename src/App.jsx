@@ -18,10 +18,11 @@ import Loader from './components/Loader';
 
 import { useLoader } from "./context/LoaderProvider"
 import Dashboard from './components/dashboard/Dashboard';
-import DataTable from './components/dashboard/Datatable';
+import DataTable from './components/dashboard/datatable/Datatable';
 import HomePage from './components/dashboard/Home';
 import ProfilePage from './components/dashboard/Profile,';
 import ProtectedRoute from './context/ProtectedRoute';
+import FoodRequest from './components/dashboard/FoodRequest';
 
 
 
@@ -180,9 +181,11 @@ const App = () => {
     {
       path: "/dashboard",
       element: (
-        <ProtectedRoute>
+        <>
           <Dashboard />
-        </ProtectedRoute>
+          <Loader show={loader.loading} />
+        </>
+
       ),
       children: [
         {
@@ -191,7 +194,7 @@ const App = () => {
         },
         {
           path: "food-requests",
-          element: <DataTable data={requestsData} title="Food Requests" />,
+          element: <FoodRequest/>,
         },
         {
           path: "your-donations",

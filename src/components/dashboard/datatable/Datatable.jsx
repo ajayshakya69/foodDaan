@@ -1,13 +1,13 @@
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
-import { Select, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Card, CardContent } from "../../ui/card";
+import { Input } from "../../ui/input";
+import { Select, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { BarChart3, ChevronLeft, ChevronRight } from "lucide-react";
+
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
+import TableContent from "./Table";
 
 const categories = ["All", "Grains", "Legumes", "Canned Goods", "Oils", "Bakery", "Dairy", "Fruits", "Meat"];
 
@@ -26,6 +26,7 @@ export default function DataTable({ data, title }) {
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
 
+  
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(filteredData.length / entriesPerPage); i++) {
     pageNumbers.push(i);
@@ -85,43 +86,11 @@ export default function DataTable({ data, title }) {
               </Select>
             </div>
           </div>
-          <div className="hidden md:block">
-            <Table className="text-lg">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Food Name</TableHead>
-                  <TableHead >Expiry Date</TableHead>
-                  <TableHead >Quantity</TableHead>
-                  <TableHead >Category</TableHead>
-                  <TableHead >Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentEntries.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell>{item.expiryDate}</TableCell>
-                    <TableCell>{item.quantity}</TableCell>
-                    <TableCell>{item.category}</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <BarChart3 className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+
+       
+           <TableContent requests={currentEntries}/>
+       
+
           <div className="md:hidden space-y-4">
             {currentEntries.map((item) => (
               <Card key={item.id} className="bg-white bg-opacity-20">

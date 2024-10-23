@@ -21,28 +21,30 @@ import { useEffect, useState } from "react";
 import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
 import { useAuth } from "@/context/AuthProvider";
+import TableContent from "./datatable/Table";
 
 
 
 export default function HomePage({ requestsData }) {
-    const [request, setRequest] = useState(null)
+    const [requests, setRequests] = useState(null)
     const { setLoading } = useLoader()
     const user = useAuth()
 
+
+
     useEffect(() => {
-
-
         setLoading(true)
 
-        privateAxios
-            .get(`/requests/recent/${user.role}/${user._id}`)
-            .then(res => setRequest(res.data))
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false))
+        if (user) {
+            privateAxios
+                .get(`/requests/recent/${user.role}/${user._id}`)
+                .then(res => { setRequests(res.data) })
+                .catch(err => console.log(err))
+                .finally(() => setLoading(false))
+        }
 
-    }, [])
 
-
+    }, [user])
 
     return (
         (<div className="space-y-8">
@@ -70,60 +72,31 @@ export default function HomePage({ requestsData }) {
                 <CardHeader>
                     <CardTitle>Recent Food Requests</CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <div className="hidden md:block">
-                        <Table className="text-lg">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Food Name</TableHead>
-                                    <TableHead>Expiry Date</TableHead>
-                                    <TableHead>Quantity</TableHead>
-                                    <TableHead>Action</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {requestsData.slice(0, 3).map((request) => (
-                                    <TableRow key={request.id}>
-                                        <TableCell className="font-medium">{request.name}</TableCell>
-                                        <TableCell>{request.expiryDate}</TableCell>
-                                        <TableCell>{request.quantity}</TableCell>
-                                        <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                                        <span className="sr-only">Open menu</span>
-                                                        <BarChart3 className="h-4 w-4" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Accept Request</DropdownMenuItem>
-                                                    <DropdownMenuItem>Decline Request</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                {!!requests && requests.length > 0 ?
+                    <CardContent>
+                        <TableContent requests={requests} />
+                        <div className="md:hidden space-y-4">
+                            {requestsData.map((request) => (
+                                <Card key={request.id} className="bg-white bg-opacity-20">
+                                    <CardContent className="p-4">
+                                        <div className="font-bold text-lg">{request.name}</div>
+                                        <div>Expiry: {request.expiryDate}</div>
+                                        <div>Quantity: {request.quantity}</div>
+                                        <div className="mt-2">
+                                            <Button variant="secondary" size="sm" className="mr-2">View Details</Button>
+                                            <Button variant="secondary" size="sm" className="mr-2">Accept</Button>
+                                            <Button variant="secondary" size="sm">Decline</Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </CardContent>
+                    :
+                    <div className="mx-auto w-full">
+                        <h3>No recent requests</h3>
                     </div>
-                    <div className="md:hidden space-y-4">
-                        {requestsData.slice(0, 3).map((request) => (
-                            <Card key={request.id} className="bg-white bg-opacity-20">
-                                <CardContent className="p-4">
-                                    <div className="font-bold text-lg">{request.name}</div>
-                                    <div>Expiry: {request.expiryDate}</div>
-                                    <div>Quantity: {request.quantity}</div>
-                                    <div className="mt-2">
-                                        <Button variant="secondary" size="sm" className="mr-2">View Details</Button>
-                                        <Button variant="secondary" size="sm" className="mr-2">Accept</Button>
-                                        <Button variant="secondary" size="sm">Decline</Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </CardContent>
+                }
             </Card>
         </div>)
     );

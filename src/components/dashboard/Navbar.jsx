@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Home, ShoppingBag, UtensilsCrossed, User } from "lucide-react";
 import NavItem from "./Navitem";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthProvider";
 
+
 export default function Navbar() {
 
-  const user=useAuth()
+const user = useAuth()
+
+
+
 
   return (
     <nav className="w-full lg:w-64 bg-white bg-opacity-10 p-4">
@@ -14,7 +18,7 @@ export default function Navbar() {
         Go Back
       </Link>
       <div className="username bg-white flex justify-center items-center p-3 rounded-lg mb-7">
-        <h1 className="m-auto text-lg">Welcome, {user.name}</h1>
+        <h1 className="m-auto text-lg">Welcome, {user?user.name:"guest"}</h1>
       </div>
       <div className="flex lg:flex-col space-x-4 lg:space-x-0 lg:space-y-4 dash-nav">
         <NavItem
