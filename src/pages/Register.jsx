@@ -141,7 +141,6 @@ const Register = () => {
                 <option value="">Select Category</option>
                 <option value="donor">donor</option>
                 <option value="requester">requester</option>
-                <option value="other">Other</option>
               </select>
             </div>
 

@@ -22,6 +22,7 @@ import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
 import { useAuth } from "@/context/AuthProvider";
 import TableContent from "./datatable/Table";
+import RequestData from "./datatable/Table";
 
 
 
@@ -46,6 +47,7 @@ export default function HomePage({ requestsData }) {
 
     }, [user])
 
+    
     return (
         (<div className="space-y-8">
             <h1 className="text-3xl font-bold text-white">Dashboard</h1>
@@ -73,25 +75,7 @@ export default function HomePage({ requestsData }) {
                     <CardTitle>Recent Food Requests</CardTitle>
                 </CardHeader>
                 {!!requests && requests.length > 0 ?
-                    <CardContent>
-                        <TableContent requests={requests} />
-                        <div className="md:hidden space-y-4">
-                            {requestsData.map((request) => (
-                                <Card key={request.id} className="bg-white bg-opacity-20">
-                                    <CardContent className="p-4">
-                                        <div className="font-bold text-lg">{request.name}</div>
-                                        <div>Expiry: {request.expiryDate}</div>
-                                        <div>Quantity: {request.quantity}</div>
-                                        <div className="mt-2">
-                                            <Button variant="secondary" size="sm" className="mr-2">View Details</Button>
-                                            <Button variant="secondary" size="sm" className="mr-2">Accept</Button>
-                                            <Button variant="secondary" size="sm">Decline</Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </CardContent>
+                    <RequestData requests={requests} />
                     :
                     <div className="mx-auto w-full">
                         <h3>No recent requests</h3>

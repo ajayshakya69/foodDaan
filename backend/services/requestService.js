@@ -93,7 +93,6 @@ class FoodRequestService {
         ])
 
        
-        console.log("daRequest.ta", data)
 
         return data;
     }
@@ -101,15 +100,14 @@ class FoodRequestService {
     static async getRecentRequests(id, role) {
 
 
-        const request = await Request.find({ [`${role}Id`]: id })
+        const requests = await Request.find({ [`${role}Id`]: id })
             .sort({ createdAt: -1 })
             .limit(5)
             .populate("foodItemId")
 
-        console.log(request)
 
 
-        return request;
+        return requests;
     }
 }
 

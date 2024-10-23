@@ -1,7 +1,9 @@
 
 const { z } = require('zod');
 
-const status = ['pending', 'accept', 'reject', 'cancel','complete'];
+
+const status = ['pending', 'accepted', 'rejected', 'cancelled','completed'];
+
 
 const foodRequestSchema = z.object({
     requesterId: z.string().min(1, "Requester id  is required"),

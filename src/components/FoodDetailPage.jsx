@@ -20,6 +20,7 @@ const FoodDetailPage = () => {
   const { setLoading } = useLoader();
 
   const handleFoodRequest = () => {
+
     const userData = JSON.parse(localStorage.getItem('loggingUser'));
 
 

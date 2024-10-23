@@ -7,7 +7,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
   const [showSubTopics, setShowSubTopics] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
- const user = useAuth();
+  const user = useAuth();
 
   const navbarRef = useRef(null);
   const navigate = useNavigate()
@@ -49,8 +49,8 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
             <ul className={`flex flex-col navbar lg:flex-row space-x-0 lg:space-x-6 text-white text-lg transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen navbar overflow-y-auto' : 'max-h-0 overflow-hidden'} lg:max-h-full lg:overflow-visible`}>
               <li>
                 <NavLink
-              
-                 to="/" className="hover:text-yellow-300 transitiond nav-link-item  duration-200 block p-2 lg:p-0">Home</NavLink>
+
+                  to="/" className="hover:text-yellow-300 transitiond nav-link-item  duration-200 block p-2 lg:p-0">Home</NavLink>
               </li>
               {isLoggedIn && (
                 <li>
@@ -59,12 +59,14 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
 
 
               )}
-              <li>
-                <NavLink to="/food-pantry" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Food Pantry</NavLink>
-              </li>
 
-              {(isLoggedIn && user.role==="donor")&& (
-                
+              {(isLoggedIn && user.role === "requester") && (
+                <li>
+                  <NavLink to="/food-pantry" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Food Pantry</NavLink>
+                </li>
+              )}
+              {(isLoggedIn && user.role === "donor") && (
+
                 <li>
                   <NavLink to="/donation-form" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Donate Food</NavLink>
                 </li>
