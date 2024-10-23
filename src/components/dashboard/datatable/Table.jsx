@@ -5,20 +5,48 @@ import { BarChart3 } from "lucide-react";
 
 import { useAuth } from "@/context/AuthProvider";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import ConfirmDialog from "@/components/AlertDialog";
+import { privateAxios } from "@/lib/axios";
+import { useLoader } from "@/context/LoaderProvider";
 
-export default function RequestData({ requests }) {
+export default function RequestData({ requests, fetchRecentRequests }) {
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [handlerFunc, setHandlerFunc] = useState()
+    const [alertMsg, setAlertMsg] = useState()
+
+
 
     const user = useAuth()
+    const { setLoading } = useLoader()
 
-    function updateRequest(event) {
-        const requestId = event.target.dataset.requestid;
-        const status = event.target.dataset.status;
 
-        console.log('Request ID:', requestId);
-        console.log('Status:', status);
+
+    function updateRequest(requestId, status) {
+        setLoading(true)
+        privateAxios
+            .patch(`/request/update/${requestId}`, {
+                status: status
+            })
+            .then(res => {
+                if (res.status === 204) {
+                    fetchRecentRequests();
+                }
+            })
+            .catch(err => console.log(err))
+            .finally(() => setLoading(false))
     }
-    function editRequest(e) {
-        console.log(e.target)
+
+
+    function editRequest(requestId) {
+        console.log("edit", requestId)
+    }
+
+
+
+    function dialogHandler(id, status) {
+        setHandlerFunc(updateRequest(id, status))
+        setAlertMsg(`The request will be ${status}`)
     }
 
     return (
@@ -37,35 +65,28 @@ export default function RequestData({ requests }) {
 
                                             <Button
                                                 variant="secondary"
-                                                data-requestid={request._id}
-                                                data-status="accepted"
-                                                onClick={updateRequest}
-                                                size="sm" className="mr-2"
-                                            >Accept</Button>
-                                            <Button
-                                                variant="secondary"
-                                                data-requestid={request._id}
-                                                data-status="rejected"
-                                                size="sm"
-                                                onClick={updateRequest}
-                                            >Reject</Button>
-                                        </div> :
-                                        <div className="mt-2">
-
-                                            <Button
-                                                variant="secondary"
-                                                data-requestid={request._id}
-                                                onClick={editRequest}
+                                                onClick={() => editRequest(request._id)}
                                                 size="sm" className="mr-2"
                                             >Edit</Button>
                                             <Button
                                                 variant="secondary"
-                                                data-requestid={request._id}
-                                                data-status="cancelled"
-                                                onClick={updateRequest}
+                                                onClick={() => dialogHandler(request._id, "cancelled")}
                                                 size="sm"
                                             >Cancel</Button>
                                         </div>
+                                        :
+                                        <div className="mt-2">
+
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => dialogHandler(request._id, "accepted")}
+                                                size="sm" className="mr-2"
+                                            >Accept</Button>
+                                            <Button
+                                                onClick={() => dialogHandler(request._id, "rejected")}
+                                            >Reject</Button>
+                                        </div>
+
 
                                     }
                                 </CardContent>
@@ -104,15 +125,13 @@ export default function RequestData({ requests }) {
                                             {(!!user && user.role === "requester") ?
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem
-                                                        data-requestid={request._id}
-                                                        onClick={editRequest}
+
+                                                        onClick={() => editRequest(request._id)}
                                                     >
                                                         Edit
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
-                                                        data-requestid={request._id}
-                                                        data-status="cancelled"
-                                                        onClick={updateRequest}
+                                                        onClick={() => dialogHandler(request._id, "cancelled")}
                                                     >
                                                         Cancel
                                                     </DropdownMenuItem>
@@ -120,16 +139,12 @@ export default function RequestData({ requests }) {
                                                 :
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem
-                                                        data-requestid={request._id}
-                                                        data-status="accepted"
-                                                        onClick={updateRequest}
+                                                        onClick={() => dialogHandler(request._id, "accepted")}
                                                     >
                                                         Accept
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
-                                                        data-requestid={request._id}
-                                                        data-status="rejected"
-                                                        onClick={updateRequest}
+                                                        onClick={() => dialogHandler(request._id, "rejected")}
                                                     >
                                                         Reject
                                                     </DropdownMenuItem>
@@ -143,6 +158,14 @@ export default function RequestData({ requests }) {
                     </Table>
                 </CardContent>
             </div>
+
+            <ConfirmDialog
+                dialogOpen={dialogOpen}
+                setDialogOpen={setDialogOpen}
+                handlerFunc={handlerFunc}
+                title="Confirm Your Action!"
+                message={alertMsg}
+            />
         </div>
     )
 }

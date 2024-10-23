@@ -16,6 +16,6 @@ router.get("/requests/:role/:userId", asynchandler(FoodController.getRequestsByU
 
 
 
-router.put("/request/update/:id", asynchandler(FoodController.updateRequestStatus))
+router.patch("/request/update/:id", asynchandler(FoodController.updateRequestStatus))
 
 module.exports = router;

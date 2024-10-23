@@ -6,18 +6,26 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { privateAxios } from '@/lib/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLoader } from '@/context/LoaderProvider';
-import ConfirmMation from './AlertDialog';
+import ConfirmDialog from './AlertDialog';
+import { Button } from './ui/button';
 
 
 
 const FoodDetailPage = () => {
   const [requestQuantity, setRequestQuantity] = useState(1);
   const [product, setProduct] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
 
   const { id } = useParams()
   const { setLoading } = useLoader();
+
+
+  function dialogHandler() {
+    setDialogOpen(true)
+  }
+
 
   const handleFoodRequest = () => {
 
@@ -36,7 +44,7 @@ const FoodDetailPage = () => {
       .then(res => {
         if (res.status == 201) {
           console.log(res.data)
-          navigate('/recipient-dashboard')
+          navigate('/dashboard')
         }
       })
       .catch(err => {
@@ -108,15 +116,22 @@ const FoodDetailPage = () => {
               onChange={(e) => setRequestQuantity(parseInt(e.target.value))}
               className="w-24" />
           </div>
-          <ConfirmMation
-            title="Confirm Request!"
-            message="Are you sure you want to request the food"
-            handleFoodRequest={handleFoodRequest}
-          />
+
+          <Button onClick={() => dialogHandler()}>
+            Request Food
+          </Button>
+
         </CardFooter>
       </Card>
 
 
+      <ConfirmDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        handlerFunc={handleFoodRequest}
+        title="Confirm Request!"
+        message="Are you sure you want to request the food"
+      />
 
 
 

@@ -209,7 +209,7 @@ const DonationForm = () => {
             <h2 className="text-lg mb-4 text-center">You are a true Superhero of our nation</h2>
             <div className="flex gap-5 align-baselin justify-center">
               <Button onClick={()=>setShowPopup(false)}>Donate more</Button>
-              <Button onClick={()=>navigate('/donor-dashboard')}>Dashboard</Button>
+              <Button onClick={()=>navigate('/dashboard')}>Dashboard</Button>
             </div>
           </div>
         </div>

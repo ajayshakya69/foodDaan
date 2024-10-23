@@ -60,12 +60,12 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
 
               )}
 
-              {(isLoggedIn && user.role === "requester") && (
+              {(isLoggedIn && !!user && user.role === "requester") && (
                 <li>
                   <NavLink to="/food-pantry" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Food Pantry</NavLink>
                 </li>
               )}
-              {(isLoggedIn && user.role === "donor") && (
+              {(isLoggedIn && !!user  && user.role === "donor") && (
 
                 <li>
                   <NavLink to="/donation-form" className="hover:text-yellow-300 transitiond nav-link-item duration-200 block p-2 lg:p-0">Donate Food</NavLink>
