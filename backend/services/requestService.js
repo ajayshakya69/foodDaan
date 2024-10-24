@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Request = require("../models/foodRequestModel")
     ;
 const { Mongoose } = require("mongoose");
+const FoodService = require("./foodService");
 
 class FoodRequestService {
 
@@ -54,22 +55,52 @@ class FoodRequestService {
 
 
 
+
+
     static async updateRequestStatus(id, status) {
-        try {
-            const request = await Request.findByIdAndUpdate(id, { status: status })
-        } catch (error) {
-            throw new Error("error in updating status");
+
+        const checkRequest = await FoodRequestService.getRequestById(id)
+ console.log("present request",checkRequest)
+        if (!checkRequest)
+            throw new Error("Request Not found")
+
+        if ((checkRequest.quantity > checkRequest.foodItemId.quantity && status === "accepted") || !checkRequest.foodItemId.isAvailable) {
+            const request = await Request.findByIdAndUpdate(id, { status: "rejected" })
+            return request;
         }
+
+        else {
+
+            const request = await Request.findByIdAndUpdate(id, { status: status })
+
+            if (request && status === "accepted") {
+                const updatedQuantity = checkRequest.foodItemId.quantity - checkRequest.quantity;
+
+                await FoodService.updateFoodItem(checkRequest.foodItemId._id, { quantity: updatedQuantity });
+                
+            }
+
+            return request;
+        }
+
     }
 
+
+
+
+
     static async getRequestById(id) {
-        const data = await Request.findById(id);
+        const data = await Request.findById(id)
+            .populate("foodItemId")
 
         return data;
     }
+
+
+
     static async getRequestsByUserId(id, role) {
         console.log("requests comes", `${role}Id`)
-        
+
         const matchFilter = {
             [`${role}Id`]: new mongoose.Types.ObjectId(id)
         };
@@ -78,7 +109,7 @@ class FoodRequestService {
             {
                 $facet: {
                     requestData: [
-                        { $match:matchFilter}
+                        { $match: matchFilter }
                     ],
                     counts: [
                         {
@@ -92,7 +123,7 @@ class FoodRequestService {
             }
         ])
 
-       
+
 
         return data;
     }

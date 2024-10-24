@@ -25,9 +25,10 @@ class FoodService {
         )
 
         if (!updatedItem) {
-            throw new Error("Food donation item not found");
+            throw new Error("Food donation item not updated");
         }
 
+        console.log("updated food Item", updatedItem)
         return updatedItem;
     }
 
@@ -41,6 +42,7 @@ class FoodService {
             .findById(id)
             .populate('donatedBy', "name organization_name")
             .exec();
+
 
 
         return data;
@@ -57,7 +59,7 @@ class FoodService {
     static async getFoodItems() {
         const currentDate = new Date().toISOString().split('T')[0];
         const data = await FoodDonation.find({ expirationDate: { $gt: currentDate } });
-        
+
         return data;
     }
 

@@ -60,7 +60,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
                                     <div className="font-bold text-lg">{request.name}</div>
                                     <div>Expiry: {request.expiryDate}</div>
                                     <div>Quantity: {request.quantity}</div>
-                                    {(!!user && user.role === "requester") ?
+                                    {request.status === "pending" && ((!!user && user.role === "requester") ?
                                         <div className="mt-2">
 
                                             <Button
@@ -88,7 +88,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
                                         </div>
 
 
-                                    }
+                                    )}
                                 </CardContent>
                             </Card>
                         ))}
@@ -122,7 +122,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
                                                     <BarChart3 className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            {(!!user && user.role === "requester") ?
+                                            {request.status === "pending" && ((!!user && user.role === "requester") ?
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem
 
@@ -149,7 +149,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
                                                         Reject
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
-                                            }
+                                            )}
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>

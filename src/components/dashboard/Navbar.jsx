@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthProvider";
 
 export default function Navbar() {
 
-const user = useAuth()
+  const user = useAuth()
 
 
 
@@ -18,7 +18,7 @@ const user = useAuth()
         Go Back
       </Link>
       <div className="username bg-white flex justify-center items-center p-3 rounded-lg mb-7">
-        <h1 className="m-auto text-lg">Welcome, {user?user.name:"guest"}</h1>
+        <h1 className="m-auto text-lg">Welcome, {user ? user.name : "guest"}</h1>
       </div>
       <div className="flex lg:flex-col space-x-4 lg:space-x-0 lg:space-y-4 dash-nav">
         <NavItem
@@ -32,11 +32,12 @@ const user = useAuth()
           label="Food Requests"
           to="food-requests"
         />
-        <NavItem
-          icon={<UtensilsCrossed className="mr-2" />}
-          label="Your Donations"
-          to="your-donations"
-        />
+        {(!!user && user.role === "donor") && (
+          <NavItem
+            icon={<UtensilsCrossed className="mr-2" />}
+            label="Your Donations"
+            to="your-donations"
+          />)}
         <NavItem
           icon={<User className="mr-2" />}
           label="Profile"

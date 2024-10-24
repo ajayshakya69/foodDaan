@@ -93,9 +93,14 @@ class FoodRequestController {
         }
 
         try {
+           
+
             await FoodRequestService.updateRequestStatus(idValidation.data, statusValidation.data.status)
+            
             res.status(204).send();
         } catch (error) {
+            if(error.message==="Request Not found")
+                res.status(404)
             next(error)
         }
 

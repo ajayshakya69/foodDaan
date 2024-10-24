@@ -27,12 +27,12 @@ body {
 
 .status-rejected,
 .status-cancelled {
-  color: yellow;
+  color: red;
   font-weight: 600;
 }
 
 .status-accepted {
-  color: green;
+  color: rgb(0, 132, 50);
   font-weight: 600;
 }
 

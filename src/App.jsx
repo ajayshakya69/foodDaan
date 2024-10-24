@@ -6,7 +6,6 @@ import Home from './components/Home';
 import Donationform from './components/Donationform';
 import RequestFood from './components/RequestFood';
 import FoodDetailPage from './components/FoodDetailPage'; // New Import
-import ReceivedFood from './components/ReceivedFood';
 import Leaderboard from './components/Leaderboard';
 import HelpUs from './components/HelpUs';
 import Login from './pages/Login';
@@ -26,47 +25,8 @@ import FoodRequest from './components/dashboard/FoodRequest';
 
 
 
-const donationsData = [
-  { id: 1, name: "Rice", expiryDate: "2024-05-01", quantity: 50, category: "Grains" },
-  { id: 2, name: "Beans", expiryDate: "2024-06-15", quantity: 30, category: "Legumes" },
-  { id: 3, name: "Pasta", expiryDate: "2024-07-30", quantity: 40, category: "Grains" },
-  { id: 4, name: "Canned Tomatoes", expiryDate: "2024-08-20", quantity: 25, category: "Canned Goods" },
-  { id: 5, name: "Olive Oil", expiryDate: "2024-12-31", quantity: 15, category: "Oils" },
-];
 
-const requestsData = [
-  { id: 1, name: "Bread", expiryDate: "2024-04-20", quantity: 20, category: "Bakery" },
-  { id: 2, name: "Milk", expiryDate: "2024-04-25", quantity: 15, category: "Dairy" },
-  { id: 3, name: "Eggs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-  { id: 1, name: "Bsdfsadfasdread", expiryDate: "2024-04-20", quantity: 20, category: "Bakery" },
-  { id: 2, name: "Milk", expiryDate: "2024-04-25", quantity: 15, category: "Dairy" },
-  { id: 3, name: "Eggs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-  { id: 1, name: "Bresdfasdfasad", expiryDate: "2024-04-20", quantity: 20, category: "Bakery" },
-  { id: 2, name: "Milk", expiryDate: "2024-04-25", quantity: 15, category: "Dairy" },
-  { id: 3, name: "Eggs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-  { id: 3, name: "Eggs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-  { id: 1, name: "Breasdafsadfasd", expiryDate: "2024-04-20", quantity: 20, category: "Bakery" },
-  { id: 2, name: "Milk", expiryDate: "2024-04-25", quantity: 15, category: "Dairy" },
-  { id: 3, name: "Eggs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-  { id: 3, name: "Egsdfasdfgs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-  { id: 1, name: "Bread", expiryDate: "2024-04-20", quantity: 20, category: "Bakery" },
-  { id: 2, name: "Mdsfadsfailk", expiryDate: "2024-04-25", quantity: 15, category: "Dairy" },
-  { id: 3, name: "Eggs", expiryDate: "2024-05-05", quantity: 25, category: "Dairy" },
-  { id: 4, name: "Apples", expiryDate: "2024-05-10", quantity: 30, category: "Fruits" },
-  { id: 5, name: "Chicken", expiryDate: "2024-05-15", quantity: 10, category: "Meat" },
-];
+
 
 
 
@@ -160,10 +120,6 @@ const App = () => {
         },
 
         {
-          path: "/received-food",
-          element: <ReceivedFood />
-        },
-        {
           path: "/food-detail/:id",
           element: <FoodDetailPage />
         },
@@ -190,7 +146,7 @@ const App = () => {
       children: [
         {
           path: "",
-          element: <HomePage requestsData={requestsData} />,
+          element: <HomePage />,
         },
         {
           path: "food-requests",
@@ -198,7 +154,7 @@ const App = () => {
         },
         {
           path: "your-donations",
-          element: <DataTable data={donationsData} title="Your Donations" />,
+          element: <DataTable/>,
         },
         {
           path: "profile",
