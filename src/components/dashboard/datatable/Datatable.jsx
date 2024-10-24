@@ -7,30 +7,38 @@ import { SelectContent } from "@radix-ui/react-select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../../ui/button";
-import TableContent from "./Table";
-
-const categories = ["All", "Grains", "Legumes", "Canned Goods", "Oils", "Bakery", "Dairy", "Fruits", "Meat"];
+import RequestData from "./Table";
 
 
-export default function DataTable({ data, title }) {
+
+
+export default function DataTable({ requests, title }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState("All");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(5);
 
-  const filteredData = data.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (selectedCategory === "All" || item.category === selectedCategory));
+  console.log("reqeusts",requests)
+
+  const filteredData = requests.filter((item) =>
+  
+    item.foodItem.foodName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (selectedStatus === "All" || item.status === selectedStatus));
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
 
-  
+
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(filteredData.length / entriesPerPage); i++) {
     pageNumbers.push(i);
   }
+
+ 
+
+
 
   return (
     (<div className="space-y-4">
@@ -53,14 +61,14 @@ export default function DataTable({ data, title }) {
               <Label htmlFor="category" className="sr-only">
                 Category
               </Label>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus} className="capitalize">
                 <SelectTrigger className="w-[180px] bg-white bg-opacity-20 text-white">
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder="Select category" className="capitalize" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                  {['All','accepted','pending','rejected','cancelled'].map((status) => (
+                    <SelectItem key={status} value={status} className="capitalize">
+                      {status}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -87,18 +95,18 @@ export default function DataTable({ data, title }) {
             </div>
           </div>
 
-       
-           <TableContent requests={currentEntries}/>
-       
+
+          <RequestData requests={!!requests&&requests} />
+
 
           <div className="md:hidden space-y-4">
-            {currentEntries.map((item) => (
-              <Card key={item.id} className="bg-white bg-opacity-20">
+            {!!requests&&requests.map((request) => (
+              <Card key={request._id} className="bg-white bg-opacity-20">
                 <CardContent className="p-4">
-                  <div className="font-bold text-lg">{item.name}</div>
-                  <div>Expiry: {item.expiryDate}</div>
-                  <div>Quantity: {item.quantity}</div>
-                  <div>Category: {item.category}</div>
+                  <div className="font-bold text-lg">{request.foodItem.foodName}</div>
+                  <div>Expiry: {request.foodItem.expirationDate}</div>
+                  <div>Quantity: {request.quantity}</div>
+                  <div>Status: {request.status}</div>
                   <div className="mt-2">
                     <Button variant="secondary" size="sm" className="mr-2">Edit</Button>
                     <Button variant="secondary" size="sm">Delete</Button>

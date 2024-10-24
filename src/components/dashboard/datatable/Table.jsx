@@ -20,7 +20,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
     const user = useAuth()
     const { setLoading } = useLoader()
 
-
+    console.log("requests", requests)
 
     function updateRequest(requestId, status) {
         setLoading(true)
@@ -57,8 +57,8 @@ export default function RequestData({ requests, fetchRecentRequests }) {
                         {requests.map((request) => (
                             <Card key={request._id} className="bg-white bg-opacity-20">
                                 <CardContent className="p-4">
-                                    <div className="font-bold text-lg">{request.name}</div>
-                                    <div>Expiry: {request.expiryDate}</div>
+                                    <div className="font-bold text-lg">{request.foodItem.foodName}</div>
+                                    <div>Expiry: {request.foodItem.foodName}</div>
                                     <div>Quantity: {request.quantity}</div>
                                     {request.status === "pending" && ((!!user && user.role === "requester") ?
                                         <div className="mt-2">
@@ -108,8 +108,8 @@ export default function RequestData({ requests, fetchRecentRequests }) {
 
 
                                 <TableRow key={request._id}>
-                                    <TableCell className="font-medium">{request.foodItemId.foodName}</TableCell>
-                                    <TableCell>{request.foodItemId.expirationDate}</TableCell>
+                                    <TableCell className="font-medium">{request.foodItem.foodName}</TableCell>
+                                    <TableCell>{request.foodItem.expirationDate}</TableCell>
                                     <TableCell>{request.quantity}</TableCell>
 
                                     <TableCell className={`status-${request.status}`}>{request.status}</TableCell>

@@ -111,7 +111,20 @@ class FoodRequestService {
             {
                 $facet: {
                     requestData: [
-
+                        {
+                            $lookup: {
+                                from: "food_donations",
+                                localField: "foodItemId",
+                                foreignField: "_id",
+                                as: "foodItem"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$foodItem",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        }
                     ],
                     counts: [
                         {
@@ -123,8 +136,7 @@ class FoodRequestService {
                     ]
                 }
             }
-        ])
-
+        ]);
 
 
         return data;
@@ -132,14 +144,35 @@ class FoodRequestService {
 
     static async getRecentRequests(id, role) {
 
+const matcher={
+    [`${role}Id`]: new mongoose.Types.ObjectId(id) 
+}
+        const requests = await Request.aggregate([
+            {
+                $match: matcher 
+            },
+            {
+                $sort: { createdAt: -1 } 
+            },
+            {
+                $limit: 5 
+            },
+            {
+                $lookup: {
+                    from: 'food_donations', 
+                    localField: 'foodItemId', 
+                    foreignField: '_id', 
+                    as: 'foodItem' 
+                }
+            },
+            {
+                $unwind: { path: '$foodItem', preserveNullAndEmptyArrays: true }
+            }
+        ]);
 
-        const requests = await Request.find({ [`${role}Id`]: id })
-            .sort({ createdAt: -1 })
-            .limit(5)
-            .populate("foodItemId")
 
-
-
+        console.log("request", requests)
+        
         return requests;
     }
 }

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
 import RequestData from "./datatable/Table";
+import DataTable from "./datatable/Datatable";
 
 
 export default function FoodRequest() {
@@ -19,7 +20,8 @@ export default function FoodRequest() {
     privateAxios
       .get(`/requests/${user.role}/${user._id}`)
       .then(res => {
-        if (res.status) {
+        if (res.status===200) {
+          console.log(res.data.requests)
           setRequests(res.data.requests)
           setCounts(res.data.counts)
         }
@@ -79,13 +81,8 @@ export default function FoodRequest() {
       </div>
       <h3 className="text-3xl font-bold text-white">Requests Table</h3>
 
-      {!!requests && requests.length > 0 ?
-        <RequestData requests={requests} fetchRecentRequests={fetchRecentRequests} />
-        :
-        <div className="mx-auto w-full">
-          <h3>No  requests</h3>
-        </div>
-      }
+      {!!requests?<DataTable requests={requests} title="Food requests" />:"no requests"
+}
     </div>
   )
 }
