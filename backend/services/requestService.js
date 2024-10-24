@@ -60,7 +60,6 @@ class FoodRequestService {
     static async updateRequestStatus(id, status) {
 
         const checkRequest = await FoodRequestService.getRequestById(id)
- console.log("present request",checkRequest)
         if (!checkRequest)
             throw new Error("Request Not found")
 
@@ -77,7 +76,7 @@ class FoodRequestService {
                 const updatedQuantity = checkRequest.foodItemId.quantity - checkRequest.quantity;
 
                 await FoodService.updateFoodItem(checkRequest.foodItemId._id, { quantity: updatedQuantity });
-                
+
             }
 
             return request;
@@ -99,7 +98,7 @@ class FoodRequestService {
 
 
     static async getRequestsByUserId(id, role) {
-        console.log("requests comes", `${role}Id`)
+
 
         const matchFilter = {
             [`${role}Id`]: new mongoose.Types.ObjectId(id)
@@ -107,9 +106,12 @@ class FoodRequestService {
 
         const data = await Request.aggregate([
             {
+                $match: matchFilter
+            },
+            {
                 $facet: {
                     requestData: [
-                        { $match: matchFilter }
+
                     ],
                     counts: [
                         {

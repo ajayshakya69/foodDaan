@@ -22,6 +22,7 @@ import HomePage from './components/dashboard/Home';
 import ProfilePage from './components/dashboard/Profile,';
 import ProtectedRoute from './context/ProtectedRoute';
 import FoodRequest from './components/dashboard/FoodRequest';
+import Donations from './components/dashboard/Donations';
 
 
 
@@ -146,7 +147,7 @@ const App = () => {
       children: [
         {
           path: "",
-          element: <HomePage />,
+          element: <HomePage/>,
         },
         {
           path: "food-requests",
@@ -154,7 +155,7 @@ const App = () => {
         },
         {
           path: "your-donations",
-          element: <DataTable/>,
+          element: <Donations/>,
         },
         {
           path: "profile",

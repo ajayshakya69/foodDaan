@@ -50,7 +50,7 @@ const FoodDetailPage = () => {
       .catch(err => {
         console.log(err)
       })
-      .finally(() => console.log(err))
+
   };
 
   const getProduct = () => {

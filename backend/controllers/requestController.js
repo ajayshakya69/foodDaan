@@ -4,6 +4,16 @@ const FoodService = require("../services/foodService")
 const FoodRequestService = require("../services/requestService")
 const zodError = require("../lib/zodError")
 
+function structuredCount(data) {
+    let result = {};
+    data.forEach(item => {
+        result[item._id] = item.count
+    })
+
+    return result;
+}
+
+
 class FoodRequestController {
     static async saveRequest(req, res, next) {
 
@@ -62,10 +72,12 @@ class FoodRequestController {
 
 
         try {
-            const data = await FoodRequestService.getRequestsByUserId(idValidation.data,roleValidation.data)
+            const data = await FoodRequestService.getRequestsByUserId(idValidation.data, roleValidation.data)
             if (!data)
                 throw new Error("Request not found");
-            res.status(200).json(data)
+
+
+            res.status(200).json({ requests: data[0].requestData, counts:  structuredCount(data[0].counts)})
         } catch (error) {
             if (error.message === "Request not found")
                 res.status(404)
@@ -74,7 +86,7 @@ class FoodRequestController {
 
     }
 
- 
+
 
 
 
@@ -93,13 +105,13 @@ class FoodRequestController {
         }
 
         try {
-           
+
 
             await FoodRequestService.updateRequestStatus(idValidation.data, statusValidation.data.status)
-            
+
             res.status(204).send();
         } catch (error) {
-            if(error.message==="Request Not found")
+            if (error.message === "Request Not found")
                 res.status(404)
             next(error)
         }
