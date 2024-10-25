@@ -1,9 +1,7 @@
 
 const { Schema, mongoose } = require("../lib/db")
 
-
 const requestSchema = new Schema({
-
     requesterId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -23,17 +21,13 @@ const requestSchema = new Schema({
         type: Number,
         required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-
     status: {
         type: String,
         enum: ['pending', 'accepted', 'rejected', 'cancelled'],
         default: 'pending',
     }
+}, {
+    timestamps: true
 });
 
-
-module.exports = mongoose.model('Request', requestSchema); 
+module.exports = mongoose.model('Request', requestSchema);

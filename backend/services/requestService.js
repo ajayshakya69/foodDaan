@@ -22,8 +22,7 @@ class FoodRequestService {
             const dbRequest = await Request.findOne({ requesterId: requesterId, foodItemId: foodItemId })
 
 
-            if (!dbRequest) {
-
+            if (!dbRequest || dbRequest.status !== "pending") {
 
                 const request = new Request({
                     requesterId,

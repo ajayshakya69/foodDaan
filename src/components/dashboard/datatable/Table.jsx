@@ -39,10 +39,13 @@ export default function RequestData({ data, updateTableFunc }) {
 
 
     function editRequest(requestId) {
-        console.log("edit", requestId)
     }
 
+    function viewFullRequest(requestId, ...otherParams) {
+        const selectedRequest = data.find(request => request._id === requestId)
+        console.log("selected request",selectedRequest)
 
+    }
 
     function dialogHandler(id, status) {
         setHandlerFunc(updateRequest(id, status))
@@ -87,8 +90,14 @@ export default function RequestData({ data, updateTableFunc }) {
                                             >Reject</Button>
                                         </div>
 
-
                                     )}
+                                    <div className="mt-2">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm" className="mr-2"
+                                        >View Full detail</Button>
+
+                                    </div>
                                 </CardContent>
                             </Card>
                         ))}
@@ -122,34 +131,44 @@ export default function RequestData({ data, updateTableFunc }) {
                                                     <BarChart3 className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            {request.status === "pending" && ((!!user && user.role === "requester") ?
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem
+                                            <DropdownMenuContent align="end">
+                                                {request.status === "pending" && ((!!user && user.role === "requester") ?
+                                                    <>
 
-                                                        onClick={() => editRequest(request._id)}
-                                                    >
-                                                        Edit
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        onClick={() => dialogHandler(request._id, "cancelled")}
-                                                    >
-                                                        Cancel
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                                :
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem
-                                                        onClick={() => dialogHandler(request._id, "accepted")}
-                                                    >
-                                                        Accept
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        onClick={() => dialogHandler(request._id, "rejected")}
-                                                    >
-                                                        Reject
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            )}
+                                                        <DropdownMenuItem
+
+                                                            onClick={() => editRequest(request._id)}
+                                                        >
+                                                            Edit
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => dialogHandler(request._id, "cancelled")}
+                                                        >
+                                                            Cancel
+                                                        </DropdownMenuItem>
+                                                    </>
+
+                                                    :
+                                                    <>
+
+                                                        <DropdownMenuItem
+                                                            onClick={() => dialogHandler(request._id, "accepted")}
+                                                        >
+                                                            Accept
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => dialogHandler(request._id, "rejected")}
+                                                        >
+                                                            Reject
+                                                        </DropdownMenuItem>
+                                                    </>
+                                                )}
+                                                <DropdownMenuItem
+                                                    onClick={() => viewFullRequest(request._id, "accepted")}
+                                                >
+                                                    View Full Detail
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
