@@ -62,9 +62,11 @@ class FoodRequestService {
         const checkRequest = await FoodRequestService.getRequestById(id)
         if (!checkRequest)
             throw new Error("Request Not found")
+        if (checkRequest.status !== "pending")
+            throw new Error("Request Already Updated")
 
         if ((checkRequest.quantity > checkRequest.foodItemId.quantity && status === "accepted") || !checkRequest.foodItemId.isAvailable) {
-            const request = await Request.findByIdAndUpdate(id, { status: "rejected" })
+            const request = await Request.findByIdAndUpdate(id, { status: "Cancelled" })
             return request;
         }
 
@@ -144,25 +146,25 @@ class FoodRequestService {
 
     static async getRecentRequests(id, role) {
 
-const matcher={
-    [`${role}Id`]: new mongoose.Types.ObjectId(id) 
-}
+        const matcher = {
+            [`${role}Id`]: new mongoose.Types.ObjectId(id)
+        }
         const requests = await Request.aggregate([
             {
-                $match: matcher 
+                $match: matcher
             },
             {
-                $sort: { createdAt: -1 } 
+                $sort: { createdAt: -1 }
             },
             {
-                $limit: 5 
+                $limit: 5
             },
             {
                 $lookup: {
-                    from: 'food_donations', 
-                    localField: 'foodItemId', 
-                    foreignField: '_id', 
-                    as: 'foodItem' 
+                    from: 'food_donations',
+                    localField: 'foodItemId',
+                    foreignField: '_id',
+                    as: 'foodItem'
                 }
             },
             {
@@ -172,7 +174,7 @@ const matcher={
 
 
         console.log("request", requests)
-        
+
         return requests;
     }
 }

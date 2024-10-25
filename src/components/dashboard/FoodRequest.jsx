@@ -71,7 +71,7 @@ export default function FoodRequest() {
         </Card>
         <Card className="bg-white bg-opacity-10 text-white">
           <CardHeader>
-            <CardTitle>Rejected</CardTitle>
+            <CardTitle>Cancelled</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold">{!!counts && (counts.cancelled ? counts.cancelled : "0")}</div>
@@ -81,7 +81,7 @@ export default function FoodRequest() {
       </div>
       <h3 className="text-3xl font-bold text-white">Requests Table</h3>
 
-      {!!requests?<DataTable requests={requests} title="Food requests" />:"no requests"
+      {!!requests?<DataTable data={requests} title="Food requests"  updateTableFunc={fetchRequest}/>:"no requests"
 }
     </div>
   )

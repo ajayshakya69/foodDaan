@@ -10,7 +10,7 @@ import ConfirmDialog from "@/components/AlertDialog";
 import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
 
-export default function RequestData({ requests, fetchRecentRequests }) {
+export default function RequestData({ data, updateTableFunc }) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [handlerFunc, setHandlerFunc] = useState()
     const [alertMsg, setAlertMsg] = useState()
@@ -20,7 +20,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
     const user = useAuth()
     const { setLoading } = useLoader()
 
-    console.log("requests", requests)
+    console.log("requests", data)
 
     function updateRequest(requestId, status) {
         setLoading(true)
@@ -30,7 +30,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
             })
             .then(res => {
                 if (res.status === 204) {
-                    fetchRecentRequests();
+                    updateTableFunc();
                 }
             })
             .catch(err => console.log(err))
@@ -54,7 +54,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
             <div>
                 <CardContent>
                     <div className="md:hidden space-y-4">
-                        {requests.map((request) => (
+                        {data.map((request) => (
                             <Card key={request._id} className="bg-white bg-opacity-20">
                                 <CardContent className="p-4">
                                     <div className="font-bold text-lg">{request.foodItem.foodName}</div>
@@ -104,7 +104,7 @@ export default function RequestData({ requests, fetchRecentRequests }) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {requests.map((request) => (
+                            {data.map((request) => (
 
 
                                 <TableRow key={request._id}>

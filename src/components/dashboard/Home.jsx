@@ -50,7 +50,7 @@ export default function HomePage() {
                     <CardTitle>Recent Food Requests</CardTitle>
                 </CardHeader>
                 {!!requests && requests.length > 0 ?
-                    <RequestData requests={requests} fetchRecentRequests={fetchRecentRequests}/>
+                    <RequestData requests={requests} updateTableDataFunc={fetchRecentRequests}/>
                     :
                     <div className="mx-auto w-full">
                         <h3>No recent requests</h3>

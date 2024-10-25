@@ -4,25 +4,31 @@ import { Input } from "../../ui/input";
 import { Select, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import RequestData from "./Table";
+import DynamicPagination from "@/components/dashboard/datatable/DynamicPagination";
+import { useNavigate } from "react-router-dom";
 
 
 
 
-export default function DataTable({ requests, title }) {
+
+export default function DataTable({ data, title,updateTableFunc }) {
+  const navigate = useNavigate();
+
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All");
+  const [pages, setPages] = useState(1);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(5);
 
-  console.log("reqeusts",requests)
+  console.log("data reqeusts", data)
 
-  const filteredData = requests.filter((item) =>
-  
+  const filteredData = data.filter((item) =>
+
     item.foodItem.foodName.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (selectedStatus === "All" || item.status === selectedStatus));
 
@@ -36,8 +42,19 @@ export default function DataTable({ requests, title }) {
     pageNumbers.push(i);
   }
 
- 
+  const handlePageChange = (page) => {
+    navigate(`?page=${page}`);
+  };
 
+
+  useEffect(() => {
+    setPages(Math.ceil(filteredData.length / entriesPerPage))
+  }, [filteredData])
+
+  useEffect(() => {
+    setCurrentPage(1)
+
+  }, [entriesPerPage])
 
 
   return (
@@ -66,7 +83,7 @@ export default function DataTable({ requests, title }) {
                   <SelectValue placeholder="Select category" className="capitalize" />
                 </SelectTrigger>
                 <SelectContent>
-                  {['All','accepted','pending','rejected','cancelled'].map((status) => (
+                  {['All', 'accepted', 'pending', 'rejected', 'cancelled'].map((status) => (
                     <SelectItem key={status} value={status} className="capitalize">
                       {status}
                     </SelectItem>
@@ -96,55 +113,38 @@ export default function DataTable({ requests, title }) {
           </div>
 
 
-          <RequestData requests={!!requests&&requests} />
+          <RequestData data={!!data && currentEntries} selectedStatus={selectedStatus} updateTableFunc={updateTableFunc}/>
 
 
-          <div className="md:hidden space-y-4">
-            {!!requests&&requests.map((request) => (
-              <Card key={request._id} className="bg-white bg-opacity-20">
-                <CardContent className="p-4">
-                  <div className="font-bold text-lg">{request.foodItem.foodName}</div>
-                  <div>Expiry: {request.foodItem.expirationDate}</div>
-                  <div>Quantity: {request.quantity}</div>
-                  <div>Status: {request.status}</div>
-                  <div className="mt-2">
-                    <Button variant="secondary" size="sm" className="mr-2">Edit</Button>
-                    <Button variant="secondary" size="sm">Delete</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="md:hidden space-y-4">s
+            {
+              !!data && data.map((request) => (
+                <Card key={request._id} className="bg-white bg-opacity-20">
+                  <CardContent className="p-4">
+                    <div className="font-bold text-lg">{request.foodItem.foodName}</div>
+                    <div>Expiry: {request.foodItem.expirationDate}</div>
+                    <div>Quantity: {request.quantity}</div>
+                    <div>Status: {request.status}</div>
+                    <div className="mt-2">
+                      <Button variant="secondary" size="sm" className="mr-2">Edit</Button>
+                      <Button variant="secondary" size="sm">Delete</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            }
           </div>
           <div className="mt-4 flex items-center justify-between">
             <div>
               Showing {indexOfFirstEntry + 1} to {Math.min(indexOfLastEntry, filteredData.length)} of  {filteredData.length} entries
             </div>
             <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}>
-                <ChevronLeft className="h-5 w-5 text-black" />
-              </Button>
-              {pageNumbers.map((number) => (
-                <Button
-
-                  key={number}
-                  variant={currentPage === number ? "default" : "outline"}
-                  size="sm"
-                  className={currentPage === number ? "text-white" : "text-black"}
-                  onClick={() => setCurrentPage(number)}>
-                  {number}
-                </Button>
-              ))}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageNumbers.length))}
-                disabled={currentPage === pageNumbers.length}>
-                <ChevronRight className="h-12 w-12 text-black" />
-              </Button>
+              <DynamicPagination
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+                handlePageChange={handlePageChange}
+                totalPages={pages}
+              />
             </div>
           </div>
         </CardContent>
