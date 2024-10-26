@@ -27,16 +27,16 @@ export default function DataTable({ data, title, updateTableFunc, page }) {
 
 
 
-const filteredData = data.filter((item) => {
-  // Determine the search field based on the page type
-  const searchField = page === "donations" ? item.foodName : item.foodItem.foodName;
+  const filteredData = data.filter((item) => {
+    // Determine the search field based on the page type
+    const searchField = page === "donations" ? item.foodName : item.foodItem.foodName;
 
-  // Perform the filtering based on search term and selected status
-  return (
-    searchField.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (selectedStatus === "All" || item.status === selectedStatus)
-  );
-});
+    // Perform the filtering based on search term and selected status
+    return (
+      searchField.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedStatus === "All" || item.status === selectedStatus)
+    );
+  });
 
 
 
@@ -85,23 +85,25 @@ const filteredData = data.filter((item) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-75" />
             </div>
-            <div>
-              <Label htmlFor="category" className="sr-only">
-                Category
-              </Label>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus} className="capitalize">
-                <SelectTrigger className="w-[180px] bg-white bg-opacity-20 text-white">
-                  <SelectValue placeholder="Select category" className="capitalize" />
-                </SelectTrigger>
-                <SelectContent>
-                  {page === "requests" && ['All', 'accepted', 'pending', 'rejected', 'cancelled'].map((status) => (
-                    <SelectItem key={status} value={status} className="capitalize">
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {page === "requests" &&
+              <div>
+                <Label htmlFor="category" className="sr-only">
+                  Category
+                </Label>
+                <Select value={selectedStatus} onValueChange={setSelectedStatus} className="capitalize">
+                  <SelectTrigger className="w-[180px] bg-white bg-opacity-20 text-white">
+                    <SelectValue placeholder="Select category" className="capitalize" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {['All', 'accepted', 'pending', 'rejected', 'cancelled'].map((status) => (
+                      <SelectItem key={status} value={status} className="capitalize">
+                        {status}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            }
             <div>
               <Label htmlFor="entries" className="sr-only">
                 Entries per page
@@ -126,7 +128,7 @@ const filteredData = data.filter((item) => {
 
           <RequestData data={!!data && currentEntries} selectedStatus={selectedStatus} updateTableFunc={updateTableFunc} page={page} />
 
-{/* 
+          {/* 
           <div className="md:hidden space-y-4">s
             {
               !!data && data.map((request) => (
@@ -145,7 +147,7 @@ const filteredData = data.filter((item) => {
               ))
             }
           </div> */}
-          
+
           <div className="mt-4 flex items-center justify-between">
             <div>
               Showing {indexOfFirstEntry + 1} to {Math.min(indexOfLastEntry, filteredData.length)} of  {filteredData.length} entries

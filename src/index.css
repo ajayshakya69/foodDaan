@@ -26,12 +26,13 @@ body {
 }
 
 .status-rejected,
-.status-cancelled {
+.status-cancelled,
+.status-false {
   color: red;
   font-weight: 600;
 }
 
-.status-accepted {
+.status-accepted,.status-true {
   color: rgb(0, 132, 50);
   font-weight: 600;
 }

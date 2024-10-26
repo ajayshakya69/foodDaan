@@ -172,7 +172,6 @@ class FoodRequestService {
             }
         ]);
 
-        console.log(data)
         return data;
     }
 

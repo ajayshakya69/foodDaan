@@ -48,6 +48,7 @@ class UserController {
             throw new Error(zodError(validation.error))
         }
         try {
+            console.log("request comes")
             const user = await UserService.getUserById(validation.data)
             if (!user)
                 throw new Error("user not found")

@@ -41,7 +41,7 @@ export default function Navbar() {
         <NavItem
           icon={<User className="mr-2" />}
           label="Profile"
-          to="profile"
+          to="user/profile"
         />
       </div>
     </nav>

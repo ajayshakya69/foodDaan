@@ -17,9 +17,8 @@ import Loader from './components/Loader';
 
 import { useLoader } from "./context/LoaderProvider"
 import Dashboard from './components/dashboard/Dashboard';
-import DataTable from './components/dashboard/datatable/Datatable';
 import HomePage from './components/dashboard/Home';
-import ProfilePage from './components/dashboard/Profile,';
+import ProfilePage from './components/dashboard/Profile';
 import ProtectedRoute from './context/ProtectedRoute';
 import FoodRequest from './components/dashboard/FoodRequest';
 import Donations from './components/dashboard/Donations';
@@ -28,21 +27,6 @@ import Donations from './components/dashboard/Donations';
 
 
 
-
-
-
-
-
-const userProfile = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1 234 567 8900",
-  address: "123 Main St, Anytown, USA",
-  avatar: "/placeholder.svg?height=100&width=100",
-  bio: "Passionate about reducing food waste and helping those in need.",
-  joinDate: "January 15, 2023",
-  totalDonations: 45,
-};
 
 
 
@@ -158,8 +142,8 @@ const App = () => {
           element: <Donations/>,
         },
         {
-          path: "profile",
-          element: <ProfilePage userProfile={userProfile} />,
+          path: "user/profile",
+          element: <ProfilePage/>,
         },
       ],
     },

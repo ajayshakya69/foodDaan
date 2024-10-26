@@ -7,8 +7,11 @@ import { useLoader } from '@/context/LoaderProvider'
 
 export default function Donations() {
     const [donations, setDonations] = useState(null)
+    const [activeDonations, setActiveDonations] = useState(null)
     const user = useAuth();
     const { setLoading } = useLoader();
+
+
 
     function fetchDonations() {
         setLoading(true);
@@ -25,6 +28,17 @@ export default function Donations() {
             fetchDonations()
     }, [user])
 
+
+    useEffect(() => {
+
+        if (donations) {
+            setActiveDonations(donations.filter((item) => item.isAvailable))
+
+        }
+    }, [donations])
+
+
+
     return (
         <div className="space-y-8">
 
@@ -35,7 +49,7 @@ export default function Donations() {
                         <CardTitle>Total Donations</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold">45</div>
+                        <div className="text-4xl font-bold">{donations && donations.length}</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white bg-opacity-10 text-white">
@@ -43,14 +57,14 @@ export default function Donations() {
                         <CardTitle>Active Donations</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold">45</div>
+                        <div className="text-4xl font-bold">{activeDonations && activeDonations.length}</div>
                     </CardContent>
                 </Card>
 
             </div>
 
 
-            {!!donations? <DataTable data={donations} title="All Donations" updateTableFunc={fetchDonations} page="donations" /> : "No donatons available"}
+            {!!donations ? <DataTable data={donations} title="All Donations" updateTableFunc={fetchDonations} page="donations" /> : "No donatons available"}
         </div>
     )
 }

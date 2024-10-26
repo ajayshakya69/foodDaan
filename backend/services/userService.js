@@ -26,8 +26,8 @@ class UserService {
     }
 
     static async getUserInfo(email) {
-        
-       
+
+
 
         let user = await User.findOne({ email });
 
@@ -35,7 +35,7 @@ class UserService {
         return user;
 
     }
-    static async getUserById({ id }) {
+    static async getUserById(id) {
         let user = await User.findById(id);
         return user;
     }

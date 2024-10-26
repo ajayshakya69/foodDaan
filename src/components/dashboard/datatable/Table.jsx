@@ -16,7 +16,6 @@ import { useLoader } from "@/context/LoaderProvider";
 
 function formatDate(dbdate) {
     const date = new Date(dbdate);
-    console.log("dbdata", dbdate)
 
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
@@ -38,9 +37,7 @@ export default function RequestData({ data, updateTableFunc, page }) {
 
 
     const user = useAuth()
-    const { setLoading } = useLoader()
-
-    console.log("requests", data)
+    const { setLoading } = useLoader();
 
     function updateRequest(requestId, status) {
         setLoading(true)
@@ -71,6 +68,17 @@ export default function RequestData({ data, updateTableFunc, page }) {
         setHandlerFunc(updateRequest(id, status))
         setAlertMsg(`The request will be ${status}`)
     }
+
+    function editDonation(id) {
+        console.log("heelo")
+    }
+
+    function viewFullDonationDetail() {
+        console.log("view Donation")
+    }
+
+
+
 
     return (
         <div className="hidden md:block">
@@ -139,8 +147,8 @@ export default function RequestData({ data, updateTableFunc, page }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Food Name</TableHead>
-                                <TableHead >Date(mm/dd/yy)</TableHead>
-                                <TableHead >Expiry Date (yy/mm/dd)</TableHead>
+                                <TableHead >Date</TableHead>
+                                <TableHead >Expiry Date</TableHead>
                                 <TableHead >Quantity</TableHead>
                                 <TableHead >{page === "requests" ? "Status" : "Availabelity"}</TableHead>
                                 <TableHead >Action</TableHead>
@@ -168,7 +176,7 @@ export default function RequestData({ data, updateTableFunc, page }) {
                                                 <TableCell>{item.expirationDate}</TableCell>
                                                 <TableCell>{item.quantity}</TableCell>
 
-                                                <TableCell className={`status-${item.status}`}>{item.isAvailable ? "yes" : "no"}</TableCell>
+                                                <TableCell className={`status-${item.isAvailable}`}>{item.isAvailable ? "yes" : "no"}</TableCell>
                                             </>
 
                                     }
@@ -180,44 +188,71 @@ export default function RequestData({ data, updateTableFunc, page }) {
                                                     <BarChart3 className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                {item.status === "pending" && ((!!user && user.role === "requester") ?
-                                                    <>
+                                            {
+                                                page === "requests" ?
 
+                                                    <DropdownMenuContent align="end">
+                                                        {item.status === "pending" && ((!!user && user.role === "requester") ?
+                                                            <>
+
+                                                                <DropdownMenuItem
+
+                                                                    onClick={() => editRequest(item._id)}
+                                                                >
+                                                                    Edit
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem
+                                                                    onClick={() => dialogHandler(item._id, "cancelled")}
+                                                                >
+                                                                    Cancel
+                                                                </DropdownMenuItem>
+                                                            </>
+
+                                                            :
+                                                            <>
+
+                                                                <DropdownMenuItem
+                                                                    onClick={() => dialogHandler(item._id, "accepted")}
+                                                                >
+                                                                    Accept
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem
+                                                                    onClick={() => dialogHandler(item._id, "rejected")}
+                                                                >
+                                                                    Reject
+                                                                </DropdownMenuItem>
+                                                            </>
+                                                        )}
                                                         <DropdownMenuItem
-
-                                                            onClick={() => editRequest(item._id)}
+                                                            onClick={() => viewFullRequest(item._id, "accepted")}
                                                         >
-                                                            Edit
+                                                            View Full Detail
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => dialogHandler(item._id, "cancelled")}
-                                                        >
-                                                            Cancel
-                                                        </DropdownMenuItem>
-                                                    </>
-
+                                                    </DropdownMenuContent>
                                                     :
-                                                    <>
+                                                    <DropdownMenuContent align="end">
+                                                        {item.isAvailable && ((!!user && user.role === "donor") &&
+                                                            <>
 
+                                                                <DropdownMenuItem
+
+                                                                    onClick={() => editDonation(item._id)}
+                                                                >
+                                                                    Edit
+                                                                </DropdownMenuItem>
+
+                                                            </>
+
+
+                                                        )}
                                                         <DropdownMenuItem
-                                                            onClick={() => dialogHandler(item._id, "accepted")}
+                                                            onClick={() => viewFullDonationDetail(item._id, "accepted")}
                                                         >
-                                                            Accept
+                                                            View Full Detail
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => dialogHandler(item._id, "rejected")}
-                                                        >
-                                                            Reject
-                                                        </DropdownMenuItem>
-                                                    </>
-                                                )}
-                                                <DropdownMenuItem
-                                                    onClick={() => viewFullRequest(item._id, "accepted")}
-                                                >
-                                                    View Full Detail
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
+                                                    </DropdownMenuContent>
+
+                                            }
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
