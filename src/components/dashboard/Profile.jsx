@@ -41,11 +41,10 @@ export default function ProfilePage() {
 
   const handleSave = () => {
     setIsEditing(false);
-    // Here you would typically send the updated profile to your backend
+   
   };
 
   const handleDelete = () => {
-    // Here you would typically send a request to delete the user's account
     alert("Account deletion request sent. An admin will contact you shortly.");
   };
 
