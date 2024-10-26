@@ -19,10 +19,9 @@ class FoodRequestService {
 
 
 
-            const dbRequest = await Request.findOne({ requesterId: requesterId, foodItemId: foodItemId })
+            const dbRequest = await Request.findOne({ requesterId: requesterId, foodItemId: foodItemId, status: "pending" })
 
-
-            if (!dbRequest || dbRequest.status !== "pending") {
+            if (!dbRequest) {
 
                 const request = new Request({
                     requesterId,
@@ -40,7 +39,7 @@ class FoodRequestService {
                 quantity += dbRequest.quantity;
 
                 const request = await Request.findOneAndUpdate(
-                    { requesterId: requesterId, },
+                    { requesterId: requesterId, status: "pending" },
                     { quantity: quantity },
                     { new: true }
                 )
@@ -100,7 +99,7 @@ class FoodRequestService {
 
     static async getRequestsByUserId(id, role) {
 
-
+        let userField = (role === "donor") ? "requester" : "donor";
         const matchFilter = {
             [`${role}Id`]: new mongoose.Types.ObjectId(id)
         };
@@ -108,6 +107,9 @@ class FoodRequestService {
         const data = await Request.aggregate([
             {
                 $match: matchFilter
+            },
+            {
+                $sort: { createdAt: -1 }
             },
             {
                 $facet: {
@@ -125,6 +127,37 @@ class FoodRequestService {
                                 path: "$foodItem",
                                 preserveNullAndEmptyArrays: true
                             }
+                        },
+                        {
+
+                            $lookup: {
+                                from: "users",
+                                localField: `${userField}Id`,
+                                foreignField: "_id",
+                                as: `${userField}`
+                            }
+
+                        },
+                        {
+                            $unwind: {
+                                path: `$${userField}`,
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        {
+                            $project: {
+                                foodItem: 1,
+                                createdAt: 1,
+                                quantity: 1,
+                                status: 1,
+                                [`${userField}._id`]: 1,
+                                [`${userField}.name`]: 1,
+                                [`${userField}.organization_name`]: 1,
+                                [`${userField}.email`]: 1,
+                                [`${userField}.phone`]: 1,
+                                [`${userField}.address`]: 1,
+            
+                            }
                         }
                     ],
                     counts: [
@@ -139,12 +172,13 @@ class FoodRequestService {
             }
         ]);
 
-
+        console.log(data)
         return data;
     }
 
-    static async getRecentRequests(id, role) {
 
+    static async getRecentRequests(id, role) {
+        let userField = (role === "donor") ? "requester" : "donor";
         const matcher = {
             [`${role}Id`]: new mongoose.Types.ObjectId(id)
         }
@@ -167,12 +201,42 @@ class FoodRequestService {
                 }
             },
             {
+
+                $lookup: {
+                    from: "users",
+                    localField: `${userField}Id`,
+                    foreignField: "_id",
+                    as: `${userField}`
+                }
+
+            },
+            {
+                $unwind: {
+                    path: `$${userField}`,
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
                 $unwind: { path: '$foodItem', preserveNullAndEmptyArrays: true }
+            },
+            {
+                $project: {
+                    foodItem: 1,
+                    createdAt: 1,
+                    quantity: 1,
+                    status: 1,
+                    [`${userField}._id`]: 1,
+                    [`${userField}.name`]: 1,
+                    [`${userField}.organization_name`]: 1,
+                    [`${userField}.email`]: 1,
+                    [`${userField}.phone`]: 1,
+                    [`${userField}.address`]: 1,
+
+                }
             }
         ]);
 
 
-        console.log("request", requests)
 
         return requests;
     }

@@ -5,12 +5,32 @@ import { BarChart3 } from "lucide-react";
 
 import { useAuth } from "@/context/AuthProvider";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { toLocaleString, useState } from "react";
 import ConfirmDialog from "@/components/AlertDialog";
 import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
 
-export default function RequestData({ data, updateTableFunc }) {
+
+
+
+
+function formatDate(dbdate) {
+    const date = new Date(dbdate);
+    console.log("dbdata", dbdate)
+
+    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+
+    const hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedTime = `${String(hours % 12 || 12).padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+
+    return `${formattedDate}, ${formattedTime}`;
+}
+
+export default function RequestData({ data, updateTableFunc, page }) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [handlerFunc, setHandlerFunc] = useState()
     const [alertMsg, setAlertMsg] = useState()
@@ -43,7 +63,7 @@ export default function RequestData({ data, updateTableFunc }) {
 
     function viewFullRequest(requestId, ...otherParams) {
         const selectedRequest = data.find(request => request._id === requestId)
-        console.log("selected request",selectedRequest)
+        console.log("selected request", selectedRequest)
 
     }
 
@@ -57,23 +77,36 @@ export default function RequestData({ data, updateTableFunc }) {
             <div>
                 <CardContent>
                     <div className="md:hidden space-y-4">
-                        {data.map((request) => (
-                            <Card key={request._id} className="bg-white bg-opacity-20">
+                        {data.map((item) => (
+                            <Card key={item._id} className="bg-white bg-opacity-20">
                                 <CardContent className="p-4">
-                                    <div className="font-bold text-lg">{request.foodItem.foodName}</div>
-                                    <div>Expiry: {request.foodItem.foodName}</div>
-                                    <div>Quantity: {request.quantity}</div>
-                                    {request.status === "pending" && ((!!user && user.role === "requester") ?
+                                    {page !== "donations" ?
+                                        <>
+
+                                            <div className="font-bold text-lg">{item.foodItem.foodName}</div>
+                                            <div>Date: {formatDate(item.createdAt)}</div>
+                                            <div>Expiry: {item.foodItem.expirationDate}</div>
+                                            <div>Quantity: {item.quantity}</div>
+                                        </> :
+                                        <>
+                                            <div className="font-bold text-lg">{item.foodName}</div>
+                                            <div>Date: {formatDate(item.createdAt)}</div>
+                                            <div>Expiry: {item.expirationDate}</div>
+                                            <div>Quantity: {item.quantity}</div>
+                                        </>
+                                    }
+
+                                    {item.status === "pending" && ((!!user && user.role === "requester") ?
                                         <div className="mt-2">
 
                                             <Button
                                                 variant="secondary"
-                                                onClick={() => editRequest(request._id)}
+                                                onClick={() => editRequest(item._id)}
                                                 size="sm" className="mr-2"
                                             >Edit</Button>
                                             <Button
                                                 variant="secondary"
-                                                onClick={() => dialogHandler(request._id, "cancelled")}
+                                                onClick={() => dialogHandler(item._id, "cancelled")}
                                                 size="sm"
                                             >Cancel</Button>
                                         </div>
@@ -82,11 +115,11 @@ export default function RequestData({ data, updateTableFunc }) {
 
                                             <Button
                                                 variant="secondary"
-                                                onClick={() => dialogHandler(request._id, "accepted")}
+                                                onClick={() => dialogHandler(item._id, "accepted")}
                                                 size="sm" className="mr-2"
                                             >Accept</Button>
                                             <Button
-                                                onClick={() => dialogHandler(request._id, "rejected")}
+                                                onClick={() => dialogHandler(item._id, "rejected")}
                                             >Reject</Button>
                                         </div>
 
@@ -106,23 +139,39 @@ export default function RequestData({ data, updateTableFunc }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Food Name</TableHead>
-                                <TableHead >Expiry Date</TableHead>
+                                <TableHead >Date(mm/dd/yy)</TableHead>
+                                <TableHead >Expiry Date (yy/mm/dd)</TableHead>
                                 <TableHead >Quantity</TableHead>
-                                <TableHead >Status</TableHead>
+                                <TableHead >{page === "requests" ? "Status" : "Availabelity"}</TableHead>
                                 <TableHead >Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.map((request) => (
+                            {data.map((item) => (
 
 
-                                <TableRow key={request._id}>
-                                    <TableCell className="font-medium">{request.foodItem.foodName}</TableCell>
-                                    <TableCell>{request.foodItem.expirationDate}</TableCell>
-                                    <TableCell>{request.quantity}</TableCell>
+                                <TableRow key={item._id}>
+                                    {
+                                        page !== "donations" ?
+                                            <>
+                                                <TableCell className="font-medium">{item.foodItem.foodName}</TableCell>
+                                                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                                                <TableCell>{item.foodItem.expirationDate}</TableCell>
+                                                <TableCell>{item.quantity}</TableCell>
 
-                                    <TableCell className={`status-${request.status}`}>{request.status}</TableCell>
+                                                <TableCell className={`status-${item.status}`}>{item.status}</TableCell>
+                                            </>
+                                            :
+                                            <>
+                                                <TableCell className="font-medium">{item.foodName}</TableCell>
+                                                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                                                <TableCell>{item.expirationDate}</TableCell>
+                                                <TableCell>{item.quantity}</TableCell>
 
+                                                <TableCell className={`status-${item.status}`}>{item.isAvailable ? "yes" : "no"}</TableCell>
+                                            </>
+
+                                    }
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -132,17 +181,17 @@ export default function RequestData({ data, updateTableFunc }) {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                {request.status === "pending" && ((!!user && user.role === "requester") ?
+                                                {item.status === "pending" && ((!!user && user.role === "requester") ?
                                                     <>
 
                                                         <DropdownMenuItem
 
-                                                            onClick={() => editRequest(request._id)}
+                                                            onClick={() => editRequest(item._id)}
                                                         >
                                                             Edit
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
-                                                            onClick={() => dialogHandler(request._id, "cancelled")}
+                                                            onClick={() => dialogHandler(item._id, "cancelled")}
                                                         >
                                                             Cancel
                                                         </DropdownMenuItem>
@@ -152,19 +201,19 @@ export default function RequestData({ data, updateTableFunc }) {
                                                     <>
 
                                                         <DropdownMenuItem
-                                                            onClick={() => dialogHandler(request._id, "accepted")}
+                                                            onClick={() => dialogHandler(item._id, "accepted")}
                                                         >
                                                             Accept
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
-                                                            onClick={() => dialogHandler(request._id, "rejected")}
+                                                            onClick={() => dialogHandler(item._id, "rejected")}
                                                         >
                                                             Reject
                                                         </DropdownMenuItem>
                                                     </>
                                                 )}
                                                 <DropdownMenuItem
-                                                    onClick={() => viewFullRequest(request._id, "accepted")}
+                                                    onClick={() => viewFullRequest(item._id, "accepted")}
                                                 >
                                                     View Full Detail
                                                 </DropdownMenuItem>

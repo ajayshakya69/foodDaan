@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-export default function DataTable({ data, title,updateTableFunc }) {
+export default function DataTable({ data, title, updateTableFunc, page }) {
   const navigate = useNavigate();
 
 
@@ -25,12 +25,23 @@ export default function DataTable({ data, title,updateTableFunc }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(5);
 
-  console.log("data reqeusts", data)
 
-  const filteredData = data.filter((item) =>
 
-    item.foodItem.foodName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (selectedStatus === "All" || item.status === selectedStatus));
+const filteredData = data.filter((item) => {
+  // Determine the search field based on the page type
+  const searchField = page === "donations" ? item.foodName : item.foodItem.foodName;
+
+  // Perform the filtering based on search term and selected status
+  return (
+    searchField.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (selectedStatus === "All" || item.status === selectedStatus)
+  );
+});
+
+
+
+
+
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -83,7 +94,7 @@ export default function DataTable({ data, title,updateTableFunc }) {
                   <SelectValue placeholder="Select category" className="capitalize" />
                 </SelectTrigger>
                 <SelectContent>
-                  {['All', 'accepted', 'pending', 'rejected', 'cancelled'].map((status) => (
+                  {page === "requests" && ['All', 'accepted', 'pending', 'rejected', 'cancelled'].map((status) => (
                     <SelectItem key={status} value={status} className="capitalize">
                       {status}
                     </SelectItem>
@@ -113,9 +124,9 @@ export default function DataTable({ data, title,updateTableFunc }) {
           </div>
 
 
-          <RequestData data={!!data && currentEntries} selectedStatus={selectedStatus} updateTableFunc={updateTableFunc}/>
+          <RequestData data={!!data && currentEntries} selectedStatus={selectedStatus} updateTableFunc={updateTableFunc} page={page} />
 
-
+{/* 
           <div className="md:hidden space-y-4">s
             {
               !!data && data.map((request) => (
@@ -133,7 +144,8 @@ export default function DataTable({ data, title,updateTableFunc }) {
                 </Card>
               ))
             }
-          </div>
+          </div> */}
+          
           <div className="mt-4 flex items-center justify-between">
             <div>
               Showing {indexOfFirstEntry + 1} to {Math.min(indexOfLastEntry, filteredData.length)} of  {filteredData.length} entries

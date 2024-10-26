@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
-import RequestData from "./datatable/Table";
 import DataTable from "./datatable/Datatable";
 
 
@@ -43,7 +42,7 @@ export default function FoodRequest() {
 
   return (
     <div className="space-y-8">
-      <h3 className="text-3xl font-bold text-white">Requests</h3>
+      <h3 className="text-3xl font-bold text-white">Requests Status</h3>
       <div className="grid gap-4 md:grid-cols-4">
         <Card className="bg-white bg-opacity-10 text-white">
           <CardHeader>
@@ -79,9 +78,9 @@ export default function FoodRequest() {
         </Card>
 
       </div>
-      <h3 className="text-3xl font-bold text-white">Requests Table</h3>
 
-      {!!requests?<DataTable data={requests} title="Food requests"  updateTableFunc={fetchRequest}/>:"no requests"
+
+      {!!requests?<DataTable data={requests} title="Food requests"  updateTableFunc={fetchRequest} page="requests"/>:"no requests"
 }
     </div>
   )
