@@ -18,9 +18,9 @@ class Redisutils {
         }
     }
 
-    static async clearCache(key) {
+    static async clearCache(...keys) {
         try {
-            return await redis.del(key)
+            return await redis.del(keys)
         } catch (error) {
             return error;
         }

@@ -15,6 +15,8 @@ function structuredCount(data) {
 
 
 class FoodRequestController {
+
+
     static async saveRequest(req, res, next) {
 
 
@@ -77,7 +79,7 @@ class FoodRequestController {
                 throw new Error("Request not found");
 
 
-            res.status(200).json({ requests: data[0].requestData, counts:  structuredCount(data[0].counts)})
+            res.status(200).json({ requests: data[0].requestData, counts: structuredCount(data[0].counts) })
         } catch (error) {
             if (error.message === "Request not found")
                 res.status(404)
@@ -85,9 +87,6 @@ class FoodRequestController {
         }
 
     }
-
-
-
 
 
     static async updateRequestStatus(req, res, next) {

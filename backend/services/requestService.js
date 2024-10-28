@@ -1,9 +1,9 @@
 
 const mongoose = require("mongoose");
-const Request = require("../models/foodRequestModel")
-    ;
-const { Mongoose } = require("mongoose");
+const Request = require("../models/foodRequestModel");
 const FoodService = require("./foodService");
+const Redisutils = require("../utils/redisUtils");
+
 
 class FoodRequestService {
 
@@ -31,7 +31,6 @@ class FoodRequestService {
                 })
 
                 await request.save();
-
                 return request;
             } else {
 
@@ -62,11 +61,14 @@ class FoodRequestService {
             throw new Error("Request Not found")
         if (checkRequest.status !== "pending")
             throw new Error("Request Already Updated")
-
+   
+        
+    
         if ((checkRequest.quantity > checkRequest.foodItemId.quantity && status === "accepted") || !checkRequest.foodItemId.isAvailable) {
             const request = await Request.findByIdAndUpdate(id, { status: "Cancelled" })
             return request;
         }
+
 
         else {
 
@@ -87,7 +89,6 @@ class FoodRequestService {
 
 
 
-
     static async getRequestById(id) {
         const data = await Request.findById(id)
             .populate("foodItemId")
@@ -100,6 +101,14 @@ class FoodRequestService {
     static async getRequestsByUserId(id, role) {
 
         let userField = (role === "donor") ? "requester" : "donor";
+
+
+        const cacheKey = `userRequests:${id}`;
+        const cache = await Redisutils.getCache(cacheKey);
+        if (cache)
+            return JSON.parse(cache)
+
+
         const matchFilter = {
             [`${role}Id`]: new mongoose.Types.ObjectId(id)
         };
@@ -156,7 +165,7 @@ class FoodRequestService {
                                 [`${userField}.email`]: 1,
                                 [`${userField}.phone`]: 1,
                                 [`${userField}.address`]: 1,
-            
+
                             }
                         }
                     ],
@@ -172,12 +181,25 @@ class FoodRequestService {
             }
         ]);
 
+
         return data;
+
+
     }
 
 
     static async getRecentRequests(id, role) {
         let userField = (role === "donor") ? "requester" : "donor";
+
+
+
+        const cacheKey = `userRequestsRecent:${id}`
+        const cache = await Redisutils.getCache(cacheKey);
+
+        if (cache)
+            return JSON.parse(cache)
+
+
         const matcher = {
             [`${role}Id`]: new mongoose.Types.ObjectId(id)
         }
@@ -236,9 +258,13 @@ class FoodRequestService {
         ]);
 
 
+        await Redisutils.setCache(cacheKey, requests);
+
 
         return requests;
     }
 }
+
+
 
 module.exports = FoodRequestService;
