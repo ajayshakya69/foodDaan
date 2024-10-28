@@ -17,6 +17,7 @@ class FoodRequestService {
                 throw new Error("invalid quantity")
             }
 
+            await Redisutils.clearCache(`userRequests:${requesterId}`, `userRequests:${donorId}`, `userRequestsRecent:${requesterId}`, `userRequestsRecent:${donorId}`)
 
 
             const dbRequest = await Request.findOne({ requesterId: requesterId, foodItemId: foodItemId, status: "pending" })
@@ -31,6 +32,7 @@ class FoodRequestService {
                 })
 
                 await request.save();
+
                 return request;
             } else {
 
@@ -61,9 +63,9 @@ class FoodRequestService {
             throw new Error("Request Not found")
         if (checkRequest.status !== "pending")
             throw new Error("Request Already Updated")
-   
-        
-    
+
+
+
         if ((checkRequest.quantity > checkRequest.foodItemId.quantity && status === "accepted") || !checkRequest.foodItemId.isAvailable) {
             const request = await Request.findByIdAndUpdate(id, { status: "Cancelled" })
             return request;
@@ -80,11 +82,13 @@ class FoodRequestService {
                 await FoodService.updateFoodItem(checkRequest.foodItemId._id, { quantity: updatedQuantity });
 
             }
+            await Redisutils.clearCache(`userRequests:${request.requesterId}`, `userRequests:${request.donorId}`, `userRequestsRecent:${request.requesterId}`, `userRequestsRecent:${request.donorId}`)
 
             return request;
         }
 
     }
+
 
 
 
