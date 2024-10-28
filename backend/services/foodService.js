@@ -10,6 +10,7 @@ class FoodService {
 
         try {
             await saveItem.save();
+            await Redisutils.clearmultiple("foodItems")
             return saveItem;
         } catch (error) {
             throw new Error(error.message)
@@ -29,7 +30,8 @@ class FoodService {
             throw new Error("Food donation item not updated");
         }
 
-        console.log("updated food Item", updatedItem)
+        await Redisutils.clearmultiple("foodItem")
+        
         return updatedItem;
     }
 
@@ -40,9 +42,9 @@ class FoodService {
 
         const cache = await Redisutils.getCache(cacheKey);
 
-        if (cache) 
+        if (cache)
             return JSON.parse(cache);
-        
+
 
 
         const data = await FoodDonation
@@ -59,14 +61,21 @@ class FoodService {
 
     static async getFoodItemsByUserId(id) {
 
+        const cacheKey = `foodItemByUserId:${id}`;
+        const cache = await Redisutils.getCache(cacheKey);
+
+        if (cache)
+            return JSON.parse(cache);
+
         const data = await FoodDonation.find({ donatedBy: id });
 
+        await Redisutils.setCache(cacheKey, data);
         return data;
     }
 
     static async getFoodItems() {
 
-        const cacheKey = "food_pantry"
+        const cacheKey = "foodItems"
         const cache = await Redisutils.getCache(cacheKey);
 
         if (cache)

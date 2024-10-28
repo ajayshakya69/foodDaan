@@ -25,6 +25,34 @@ class Redisutils {
             return error;
         }
     }
+
+    static async clearmultiple(prefix) {
+        console.log("prefix", prefix)
+
+        try {
+            const stream = redis.scanStream({
+                match: `${prefix}*`,
+                count: 20
+            })
+
+
+            stream.on("data", (keys) => {
+                console.log("keys", keys);
+
+
+                if (keys.length) {
+                    redis.del(keys)
+                }
+            })
+
+            stream.on("end", () => {
+                console.log(`Completed deleting keys with prefix ${prefix}`);
+            })
+
+        } catch (error) {
+            return error;
+        }
+    }
 }
 
 
