@@ -61,6 +61,8 @@ class FoodController {
 
 
     static async getFoodItems(_, res, next) {
+
+        
         try {
             const data = await FoodService.getFoodItems();
             if (data.length === 0) {

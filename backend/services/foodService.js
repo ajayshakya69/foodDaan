@@ -1,7 +1,8 @@
 
 
-const { split } = require("postcss/lib/list");
 const FoodDonation = require("../models/foodModel");
+const { redis } = require("../lib/redis");
+const Redisutils = require("../utils/redisUtils");
 class FoodService {
 
     static async createFoodItem(data) {
@@ -35,7 +36,13 @@ class FoodService {
 
     static async getFoodItemById(id) {
 
-        console.log(id);
+        const cacheKey = `foodItem:${id}`;
+
+        const cache = await Redisutils.getCache(cacheKey);
+
+        if (cache) 
+            return JSON.parse(cache);
+        
 
 
         const data = await FoodDonation
@@ -44,6 +51,7 @@ class FoodService {
             .exec();
 
 
+        await Redisutils.setCache(cacheKey, data);
 
         return data;
     }
@@ -57,8 +65,19 @@ class FoodService {
     }
 
     static async getFoodItems() {
+
+        const cacheKey = "food_pantry"
+        const cache = await Redisutils.getCache(cacheKey);
+
+        if (cache)
+            return JSON.parse(cache);
+
+
         const currentDate = new Date().toISOString().split('T')[0];
+
         const data = await FoodDonation.find({ expirationDate: { $gt: currentDate } });
+
+        await Redisutils.setCache(cacheKey, data)
 
         return data;
     }
