@@ -4,6 +4,7 @@ require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser')
 const { connectDB } = require('./lib/db');
 const {connectRedis} = require("./lib/redis")
 
@@ -30,8 +31,10 @@ app.use(cors(
     credentials: true
   }
 ))
+
   .use(express.json())
   .use(bodyParser.urlencoded({ extended: true }))
+  .use(cookieParser())
   .use(router)
   .use(globalErrorHandler)
 

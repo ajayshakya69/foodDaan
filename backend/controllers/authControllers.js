@@ -2,6 +2,8 @@
 const UserService = require('../services/userService');
 const { registerUserSchema, loginUserSchema } = require('../DTO/authentication');
 const zodError = require('../lib/zodError');
+const jwtHelper = require('../utils/jwtUtils');
+const { now } = require('mongoose');
 
 class AuthController {
 
@@ -37,6 +39,9 @@ class AuthController {
 
 
     static async login(req, res, next) {
+
+        console.log("cokkies", req.cookies)
+
         const validation = loginUserSchema.safeParse(req.body);
 
         if (!validation.success) {
@@ -51,13 +56,28 @@ class AuthController {
 
             const checkUser = await UserService.getUserInfo(email)
 
-        
+
 
             if (!checkUser || !(await checkUser.matchPassword(password))) {
                 throw new Error("invalid credentials");
             }
 
+            const accessToken = jwtHelper.generateAccessToken(checkUser)
+
+            const refreahToken = jwtHelper.generateRefreshToken(checkUser)
+
             const { password: pwd, ...dbuser } = checkUser._doc;
+
+            console.log({ accesstoken: accessToken, refresh: refreahToken })
+
+            res.cookie('token', accessToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            });
+
+
 
             res.status(200).json({ message: "login success", user: dbuser })
 
@@ -69,7 +89,22 @@ class AuthController {
             next(error)
         }
     }
+    static async refreshToken(req, res, nexy) {
 
+        try {
+            const refreshToken = req.cookies.refreshToken
+
+            if (!refreshToken)
+                throw new Error("refresh token not found");
+
+            const verify = await jwtHelper.verifyRefreshToken(refreshToken)
+
+        } catch (error) {
+            if (error.message === "invalid token")
+                res.status(401)
+            next(error)
+        }
+    }
 }
 
 module.exports = AuthController;

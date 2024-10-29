@@ -14,4 +14,6 @@ router.post('/register', asynchandler(AuthController.register))
 
 router.post('/login', asynchandler(AuthController.login));
 
+router.post('/refreshtoken', asynchandler(AuthController.refreshtoken));
+
 module.exports = router
