@@ -47,8 +47,6 @@ class AuthController {
         const { email, password } = validation.data;
 
 
-        console.log(validation.data)
-
         try {
 
             const checkUser = await UserService.getUserInfo(email)

@@ -84,6 +84,7 @@ class FoodRequestService {
             }
             await Redisutils.clearCache(`userRequests:${request.requesterId}`, `userRequests:${request.donorId}`, `userRequestsRecent:${request.requesterId}`, `userRequestsRecent:${request.donorId}`)
 
+
             return request;
         }
 
@@ -185,6 +186,7 @@ class FoodRequestService {
             }
         ]);
 
+        await Redisutils.setCache(cacheKey, data);
 
         return data;
 

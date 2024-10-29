@@ -1,9 +1,7 @@
 
 
 const FoodDonation = require("../models/foodModel");
-const { redis } = require("../lib/redis");
 const Redisutils = require("../utils/redisUtils");
-const { redirectDocument } = require("react-router-dom");
 class FoodService {
 
     static async createFoodItem(data) {
@@ -32,13 +30,13 @@ class FoodService {
         }
 
 
-        await Redisutils.clearCache(`foodItem:${id}`, `foodItemsByUserId:${updatedItem.donatedBy}`,"foodItems")
+        await Redisutils.clearCache(`foodItem:${id}`, `foodItemsByUserId:${updatedItem.donatedBy}`, "foodItems")
 
 
         return updatedItem;
     }
 
-    
+
 
     static async getFoodItemById(id) {
 
@@ -81,7 +79,6 @@ class FoodService {
 
         const cacheKey = "foodItems"
         const cache = await Redisutils.getCache(cacheKey);
-
         if (cache)
             return JSON.parse(cache);
 

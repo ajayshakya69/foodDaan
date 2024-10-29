@@ -31,7 +31,6 @@ class FoodController {
 
         if (!idvalidation.success) {
             res.status(400);
-            console.log(idvalidation.error)
             throw new Error(zodError(idvalidation.error));
         }
 
@@ -85,12 +84,10 @@ class FoodController {
             throw new Error(zodError(validation.error));
         }
         try {
-            console.log("request comes")
             const data = await FoodService.getFoodItemsByUserId(validation.data)
             if (data.length === 0) {
                 throw new Error("No donation found")
             }
-            console.log(data)
             res.status(200).send(data)
         } catch (error) {
             if (error.message === "No donation found")
@@ -106,7 +103,6 @@ class FoodController {
             ;
         if (!validation.success) {
             res.status(400);
-            console.log(validation.error)
             throw new Error(zodError(validation.error));
         }
         try {
