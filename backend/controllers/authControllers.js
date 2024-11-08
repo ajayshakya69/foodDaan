@@ -70,7 +70,7 @@ class AuthController {
 
             console.log({ accesstoken: accessToken, refresh: refreahToken })
 
-            res.cookie('token', accessToken, {
+            res.cookie('refresh_token', accessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
@@ -89,21 +89,33 @@ class AuthController {
             next(error)
         }
     }
-    static async refreshToken(req, res, nexy) {
+
+
+
+    static async refreshToken(req, res, next) {
 
         try {
-            const refreshToken = req.cookies.refreshToken
+            const refreshToken = req.cookies.refresh_token
 
             if (!refreshToken)
                 throw new Error("refresh token not found");
 
             const verify = await jwtHelper.verifyRefreshToken(refreshToken)
 
+
         } catch (error) {
             if (error.message === "invalid token")
                 res.status(401)
             next(error)
         }
+    }
+
+    static async verifyUser(req, res, next) {
+        console.log("in verify")
+       const token = req.headers;
+
+       console.log(token)
+       res.send()
     }
 }
 

@@ -39,7 +39,13 @@ class jwtHelper {
         return newAccessToken;
     }
 
+    static async decodeAccessToken(token) {
 
+        const playload = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+
+        return playload;
+        
+    }
 
 
 }

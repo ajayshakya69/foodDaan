@@ -47,11 +47,10 @@ const Login = ({ onLogin }) => {
     publicAxios
       .post("/auth/login", { email, password })
       .then(res => {
-        console.log(res)
-
+       
         if (res.status == 200) {
-          localStorage.setItem("loggingUser", JSON.stringify(res.data.user));
          
+            
           onLogin();
 
           navigate('/');
