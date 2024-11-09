@@ -64,22 +64,20 @@ class AuthController {
 
             const accessToken = jwtHelper.generateAccessToken(checkUser)
 
-            const refreahToken = jwtHelper.generateRefreshToken(checkUser)
+            const refreshToken = await jwtHelper.generateRefreshToken(checkUser)
 
-            const { password: pwd, ...dbuser } = checkUser._doc;
 
-            console.log({ accesstoken: accessToken, refresh: refreahToken })
+            console.log({ accesstoken: accessToken })
 
-            res.cookie('refresh_token', accessToken, {
+            res.cookie('refresh_token', refreshToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
-                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
             });
 
 
-
-            res.status(200).json({ message: "login success", user: dbuser })
+            res.status(200).json({ accessToken: accessToken })
 
 
         } catch (error) {
@@ -93,7 +91,6 @@ class AuthController {
 
 
     static async refreshToken(req, res, next) {
-
         try {
             const refreshToken = req.cookies.refresh_token
 
@@ -102,6 +99,16 @@ class AuthController {
 
             const verify = await jwtHelper.verifyRefreshToken(refreshToken)
 
+            if (verify) {
+                res.cookie('refresh_token', verify.newRefreshToken, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                });
+
+                res.status(200).json({ accessToken: verify.newAccessToken })
+            }
 
         } catch (error) {
             if (error.message === "invalid token")
@@ -112,10 +119,12 @@ class AuthController {
 
     static async verifyUser(req, res, next) {
         console.log("in verify")
-       const token = req.headers;
+        const token = req.headers.Authorization;
 
-       console.log(token)
-       res.send()
+        if (!token) return res.status(403).json({ message: "Unauthorized" })
+
+        console.log(token)
+        res.send('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE4OTczNWUyNmM1ZTY3ZGEzYjcyNDYiLCJyb2xlIjoiZG9ub3IiLCJpYXQiOjE3MzExMjkzMDcsImV4cCI6MTczMTEzMDIwN30.oLhoz0UgUy2O25JHAe_70_bs7IzVUgh8HM8_YYAZrfE')
     }
 }
 

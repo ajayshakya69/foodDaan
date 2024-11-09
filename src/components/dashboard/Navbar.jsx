@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthProvider";
 
 export default function Navbar() {
 
-  const user = useAuth()
+  const {user} = useAuth()
 
 
 

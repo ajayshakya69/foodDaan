@@ -8,7 +8,7 @@ import { useLoader } from '@/context/LoaderProvider'
 export default function Donations() {
     const [donations, setDonations] = useState(null)
     const [activeDonations, setActiveDonations] = useState(null)
-    const user = useAuth();
+    const {user} = useAuth();
     const { setLoading } = useLoader();
 
 

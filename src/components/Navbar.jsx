@@ -7,7 +7,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
   const [showSubTopics, setShowSubTopics] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const user = useAuth();
+  const {user} = useAuth();
 
   const navbarRef = useRef(null);
   const navigate = useNavigate()

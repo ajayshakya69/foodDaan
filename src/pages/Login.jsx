@@ -3,6 +3,7 @@ import validator from 'validator';
 import { useNavigate, Link } from 'react-router-dom';
 import { publicAxios } from '../lib/axios';
 import LogoNav from '../components/LogoNav';
+import { useAuth } from '@/context/AuthProvider';
 
 
 const Login = ({ onLogin }) => {
@@ -12,7 +13,7 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [pending, setPending] = useState(false)
-
+  const { setToken } = useAuth()
 
 
   const handleCaptcha = (e) => {
@@ -47,10 +48,10 @@ const Login = ({ onLogin }) => {
     publicAxios
       .post("/auth/login", { email, password })
       .then(res => {
-       
+
         if (res.status == 200) {
-         
-            
+
+          setToken(res.data.accessToken)
           onLogin();
 
           navigate('/');

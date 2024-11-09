@@ -16,24 +16,6 @@ export function AuthProvider(props) {
     const [token, setToken] = useState()
 
 
-    const memoizedUser = useMemo(() => user, [user]);
-
-
-    useEffect(() => {
-
-        try {
-            privateAxios.get("/auth/me")
-                .then(res => {
-                    setToken(res.data.accessToken)
-                    setUser(jwtDecode(res.data.idToken))
-                })
-        } catch (error) {
-            setToken(null)
-        }
-
-    }, [token])
-
-
 
     useLayoutEffect(() => {
         const authRequestIntercepter = privateAxios.interceptors.request.use(
@@ -49,19 +31,21 @@ export function AuthProvider(props) {
         return () => {
             privateAxios.interceptors.request.eject(authRequestIntercepter)
         }
-    }, [token])
+    }, [])
 
 
     useLayoutEffect(() => {
         const authResponseIntercepter = privateAxios.interceptors.response.use(
             (response) => response,
             (error) => {
+                console.log("comes in auth response")
                 const originalRequest = error.config;
 
-                if (error.response.status === 403 && error.respons.data.message === "Unauthorized") {
+                console.log(error.response)
+
+                if (error.response.status === 403 && error.response.data.message === "Unauthorized") {
                     try {
                         originalRequest.retry = true;
-                        console.log("comes in auth response")
                         const response = privateAxios.get("/auth/refreshtoken");
                         setToken(response.data.accessToken);
                         originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
@@ -78,11 +62,11 @@ export function AuthProvider(props) {
         return () => {
             privateAxios.interceptors.response.eject(authResponseIntercepter)
         }
-    }, [token])
+    }, [])
 
 
     return (
-        <Context.Provider value={memoizedUser}>
+        <Context.Provider value={{user,setToken}}>
             {props.children}
         </Context.Provider>
     )

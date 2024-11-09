@@ -36,7 +36,7 @@ export default function RequestData({ data, updateTableFunc, page }) {
 
 
 
-    const user = useAuth()
+    const {user} = useAuth()
     const { setLoading } = useLoader();
 
     function updateRequest(requestId, status) {

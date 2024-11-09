@@ -33,7 +33,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(null);
 
-  const user = useAuth()
+  const {user} = useAuth()
   const { setLoading } = useLoader()
   const handleEdit = () => {
     setIsEditing(true);

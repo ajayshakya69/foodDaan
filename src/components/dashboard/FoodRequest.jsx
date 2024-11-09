@@ -10,7 +10,7 @@ export default function FoodRequest() {
 
   const [requests, setRequests] = useState(null)
   const [counts, setCounts] = useState(null)
-  const user = useAuth();
+  const {user} = useAuth();
   const { setLoading } = useLoader()
 
 

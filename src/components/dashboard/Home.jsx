@@ -11,7 +11,7 @@ import RequestData from "./datatable/Table";
 export default function HomePage() {
     const [requests, setRequests] = useState(null)
     const { setLoading } = useLoader()
-    const user = useAuth()
+    const {s} = useAuth()
 
 
     function fetchRecentRequests() {
