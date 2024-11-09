@@ -40,7 +40,6 @@ class AuthController {
 
     static async login(req, res, next) {
 
-        console.log("cokkies", req.cookies)
 
         const validation = loginUserSchema.safeParse(req.body);
 
@@ -55,8 +54,6 @@ class AuthController {
         try {
 
             const checkUser = await UserService.getUserInfo(email)
-
-
 
             if (!checkUser || !(await checkUser.matchPassword(password))) {
                 throw new Error("invalid credentials");
@@ -77,7 +74,7 @@ class AuthController {
             });
 
 
-            res.status(200).json({ accessToken: accessToken })
+            res.status(200).json({ accessToken, checkUser })
 
 
         } catch (error) {

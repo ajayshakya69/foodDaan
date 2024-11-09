@@ -1,17 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useEffect, useState } from "react";
-import { privateAxios } from "@/lib/axios";
+// import { privateAxios } from "@/lib/axios";
 import { useLoader } from "@/context/LoaderProvider";
 import { useAuth } from "@/context/AuthProvider";
 import RequestData from "./datatable/Table";
+import useAxiosPrivate from "@/hooks/axiosPrivate";
 
 
 
 export default function HomePage() {
     const [requests, setRequests] = useState(null)
     const { setLoading } = useLoader()
-    const {s} = useAuth()
+    const {user} = useAuth()
+    const privateAxios = useAxiosPrivate()
 
 
     function fetchRecentRequests() {
@@ -29,6 +31,7 @@ export default function HomePage() {
         setLoading(true)
 
         if (user) {
+            console.log(user)
             fetchRecentRequests(user)
         }
 
