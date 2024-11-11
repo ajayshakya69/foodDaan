@@ -17,7 +17,7 @@ export default function FoodRequest() {
   function fetchRequest() {
     setLoading(true)
     privateAxios
-      .get(`/requests/${user.role}/${user._id}`)
+      .get(`/requests/${user.role}/${user.id}`)
       .then(res => {
         if (res.status===200) {
           console.log(res.data.requests)

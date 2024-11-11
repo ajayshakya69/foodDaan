@@ -14,7 +14,7 @@ const Login = ({ onLogin }) => {
   const navigate = useNavigate();
   const [pending, setPending] = useState(false)
 
-  const { setToken, setUser } = useAuth()
+  const { setToken } = useAuth()
 
 
   const handleCaptcha = (e) => {
@@ -52,15 +52,13 @@ const Login = ({ onLogin }) => {
 
         if (res.status == 200) {
 
-          console.log(res.data)
-
           setToken(res.data.accessToken)
-          setUser(res.data.checkUser)
+          localStorage.setItem("user", JSON.stringify(res.data.user))
+
           onLogin();
 
           navigate('/');
 
-          // navigate(0);
         }
       })
 

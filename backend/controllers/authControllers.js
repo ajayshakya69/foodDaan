@@ -3,7 +3,7 @@ const UserService = require('../services/userService');
 const { registerUserSchema, loginUserSchema } = require('../DTO/authentication');
 const zodError = require('../lib/zodError');
 const jwtHelper = require('../utils/jwtUtils');
-const { now } = require('mongoose');
+
 
 class AuthController {
 
@@ -61,10 +61,11 @@ class AuthController {
 
             const accessToken = jwtHelper.generateAccessToken(checkUser)
 
+            const IdToken = await jwtHelper.generateIdToken(checkUser._id)
             const refreshToken = await jwtHelper.generateRefreshToken(checkUser)
 
 
-            console.log({ accesstoken: accessToken })
+
 
             res.cookie('refresh_token', refreshToken, {
                 httpOnly: true,
@@ -74,7 +75,7 @@ class AuthController {
             });
 
 
-            res.status(200).json({ accessToken, checkUser })
+            res.status(200).json({ accessToken, user: checkUser, IdToken })
 
 
         } catch (error) {
@@ -95,7 +96,6 @@ class AuthController {
                 throw new Error("refresh token not found");
 
             const verify = await jwtHelper.verifyRefreshToken(refreshToken)
-
             if (verify) {
                 res.cookie('refresh_token', verify.newRefreshToken, {
                     httpOnly: true,
@@ -104,7 +104,7 @@ class AuthController {
                     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
                 });
 
-                res.status(200).json({ accessToken: verify.newAccessToken })
+                res.status(200).json({ accessToken: verify.newAccessToken, idtoken: verify.newIdToken })
             }
 
         } catch (error) {
@@ -113,17 +113,9 @@ class AuthController {
             next(error)
         }
     }
-
-    static async verifyUser(req, res, next) {
-        console.log("in verify")
-        const token = req.headers.Authorization;
-
-        if (!token) return res.status(403).json({ message: "Unauthorized" })
-
-        console.log(token)
-        res.send('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE4OTczNWUyNmM1ZTY3ZGEzYjcyNDYiLCJyb2xlIjoiZG9ub3IiLCJpYXQiOjE3MzExMjkzMDcsImV4cCI6MTczMTEzMDIwN30.oLhoz0UgUy2O25JHAe_70_bs7IzVUgh8HM8_YYAZrfE')
-    }
 }
+
+
 
 module.exports = AuthController;
 

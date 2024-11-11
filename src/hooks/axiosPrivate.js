@@ -13,9 +13,10 @@ export default function useAxiosPrivate() {
     useEffect(() => {
         const requestIntercepter = privateAxios.interceptors.request.use(
             (config) => {
-                console.log("in request intercepter")
-                if (!config.retry && token)
-                    config.headers['Authorization'] = `Bearer ${token}`
+                
+                if (!config.retry && token) {
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                }
                 return config;
 
             }
@@ -25,11 +26,14 @@ export default function useAxiosPrivate() {
         const responseIntercepter = privateAxios.interceptors.response.use(response => response,
             async (error) => {
                 const originalRequest = error.config;
-                if (error.config.status === 403 && error.config.data.message === "Unauthorized") {
-                    config.retry = true;
+                console.log("in response")
+                if (error.response.status === 403 && error.response.data.message === "Unauthorized") {
+                    console.log("updating")
+                    originalRequest.retry = true;
                     const newAccessToken = await refresh();
-                    config.headers['Authorization'] = `Bearer ${newAccessToken}`
-                    return originalRequest;
+                    console.log({newAccessToken})
+                    originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+                    return privateAxios(originalRequest);
                 }
                 return Promise.reject(error)
             }

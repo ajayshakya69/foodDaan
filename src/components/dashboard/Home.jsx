@@ -12,13 +12,13 @@ import useAxiosPrivate from "@/hooks/axiosPrivate";
 export default function HomePage() {
     const [requests, setRequests] = useState(null)
     const { setLoading } = useLoader()
-    const {user} = useAuth()
+    const { user } = useAuth()
     const privateAxios = useAxiosPrivate()
 
 
     function fetchRecentRequests() {
         privateAxios
-            .get(`/requests/recent/${user.role}/${user._id}`)
+            .get(`/requests/recent/${user.role}/${user.id}`)
             .then(res => { setRequests(res.data) })
             .catch(err => console.log(err))
             .finally(() => setLoading(false))
@@ -29,9 +29,8 @@ export default function HomePage() {
 
     useEffect(() => {
         setLoading(true)
-
+        console.log(user)
         if (user) {
-            console.log(user)
             fetchRecentRequests(user)
         }
 
@@ -44,7 +43,7 @@ export default function HomePage() {
             <h1 className="text-3xl font-bold text-white">Dashboard</h1>
 
 
-         
+
 
 
 
@@ -53,7 +52,7 @@ export default function HomePage() {
                     <CardTitle>Recent Food Requests</CardTitle>
                 </CardHeader>
                 {!!requests && requests.length > 0 ?
-                    <RequestData data={requests} updateTableFunc={fetchRecentRequests} page="requests"/>
+                    <RequestData data={requests} updateTableFunc={fetchRecentRequests} page="requests" />
                     :
                     <div className="mx-auto w-full">
                         <h3>No recent requests</h3>
