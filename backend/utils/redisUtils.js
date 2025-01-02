@@ -4,7 +4,9 @@ const { redis } = require("../lib/redis");
 class Redisutils {
     static async getCache(key) {
         try {
+            console.log("getting data")
             return await redis.get(key)
+       
         } catch (error) {
             return error;
         }
@@ -56,4 +58,4 @@ class Redisutils {
 }
 
 
-module.exports = Redisutils;
+module.exports = Redisutils;  

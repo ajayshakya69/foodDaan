@@ -47,6 +47,7 @@ class UserService {
     static async getUserCount() {
         const cacheKey = "usersCounts"
         const cache = await Redisutils.getCache(cacheKey);
+        console.log("cache",cache)
         if (cache) return JSON.parse(cache)
 
 
